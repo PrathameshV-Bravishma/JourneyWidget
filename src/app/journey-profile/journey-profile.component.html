@@ -1,0 +1,967 @@
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+  crossorigin="anonymous"
+/>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+  crossorigin="anonymous"
+></script>
+
+<div class="whitebox mt-2 clearfix profile-bg">
+  <div class="d-flex g-0">
+    <div class="w-50 left-bg">
+      <!-- style="height: 100%; max-height: 100%; border-right: solid 1px #c5c5c5" -->
+      <div class="p-2 boder-right">
+        <div class="photo-box">
+          <div class="photo mb-2">
+            <div class="d-table-div">
+              <div class="d-table-cell-div">
+                <img
+                  style="max-width: 54% !important"
+                  src="https://lab.bravishma.com:4040/assets/images/photo.png"
+                  class="img-fluid"
+                  alt=""
+                />
+              </div>
+            </div>
+          </div>
+          <div class="pro-details">
+            <h1 class="name" style="font-size: 17px !important">
+              {{ sessionBootstrapData?.firstName }}
+              {{ sessionBootstrapData?.lastName }}
+
+              <p style="font-size: 13px !important">
+                Enrolled:
+                <span
+                  [ngStyle]="{
+                    color: customerEnrolledStatus == 'YES' ? 'orange' : 'red'
+                  }"
+                  style="font-size: 13px !important"
+                  >{{ customerEnrolledStatus }}
+                </span>
+              </p>
+
+              <p style="font-size: 13px !important">
+                Authenticated:
+                <span
+                  [ngStyle]="{
+                    color: customerAuthenticatedFlag ? 'green' : 'red'
+                  }"
+                  style="font-size: 13px !important"
+                >
+                  <span *ngIf="customerAuthenticatedFlag">YES</span>
+                  <span *ngIf="!customerAuthenticatedFlag">NO</span>
+                </span>
+              </p>
+            </h1>
+
+            <h5
+              class="smalltext mt-1"
+              style="font-size: 11px !important; font-weight: normal !important"
+            >
+              {{ sessionBootstrapData?.email }}
+            </h5>
+
+            <h5
+              class="smalltext mt-1"
+              style="font-size: 11px !important; font-weight: normal !important"
+            >
+              {{ sessionBootstrapData?.phoneNumber }}
+            </h5>
+          </div>
+        </div>
+
+        <div class="iconbox">
+          <div class="row g-3" style="margin-bottom: 10px">
+            <div
+              class="col-6 col-md-3"
+              style="border: solid 0px red !important"
+            >
+              <div
+                class="ngdropdown"
+                ngbDropdown
+                style="border: solid 0px red !important"
+              >
+                <div
+                  class="icons greenbg"
+                  ngbDropdownToggle
+                  [ngStyle]="{
+                    'border-color':
+                      authFacialFlag && customerAuthenticatedFlag
+                        ? 'green'
+                        : enrollFacialFlag && customerEnrolledFlag
+                        ? 'orange'
+                        : 'red'
+                  }"
+                >
+                  <div class="d-table-div">
+                    <div class="d-table-cell-div">
+                      <img
+                        src="https://lab.bravishma.com:4040/assets/images/face-recognition.png"
+                        alt=""
+                        class="img-fluid"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <p class="icontext">Facial</p>
+                <div ngbDropdownMenu>
+                  <small
+                    ngbDropdownItem
+                    (click)="
+                      openTestModal(testModal, 'sendFacialEnrollmentRequest')
+                    "
+                    [disabled]="enrollFacialFlag"
+                    class="sendReqOption"
+                  >
+                    <!-- (click)="sendFacialEnrollmentRequest()" -->
+                    Enrollment Request</small
+                  >
+                  <small
+                    ngbDropdownItem
+                    [disabled]="authFacialFlag"
+                    (click)="openTestModal(testModal, 'sendFacialAuthRequest')"
+                    class="sendReqOption"
+                  >
+                    <!-- (click)="sendFacialAuthRequest()" -->
+                    Authentication Request
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-6 col-md-3"
+              style="border: solid 0px red !important"
+            >
+              <div
+                class="ngdropdown"
+                ngbDropdown
+                style="border: solid 0px red !important"
+              >
+                <div
+                  class="icons yellowbg"
+                  ngbDropdownToggle
+                  [ngStyle]="{
+                    'border-color':
+                      authBiometricFlag && customerAuthenticatedFlag
+                        ? 'green'
+                        : enrollBiometricFlag && customerEnrolledFlag
+                        ? 'orange'
+                        : 'red'
+                  }"
+                >
+                  <!-- [ngStyle]="{ 'border-color': customerAuthenticatedFlag === true ?
+                  'green' : enrollBiometricFlag === true ? 'orange' : 'red' }" -->
+                  <div class="d-table-div">
+                    <div class="d-table-cell-div">
+                      <img
+                        src="https://lab.bravishma.com:4040/assets/images/biometric.png"
+                        alt=""
+                        class="img-fluid"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <p class="icontext">Biometric</p>
+                <div class="ngdropdown" ngbDropdownMenu>
+                  <small
+                    ngbDropdownItem
+                    (click)="
+                      openTestModal(testModal, 'sendBiometricEnrollRequest')
+                    "
+                    [disabled]="enrollBiometricFlag"
+                    class="sendReqOption"
+                  >
+                    <!-- (click)="sendBiometricEnrollRequest()" -->
+                    Enrollment Request</small
+                  >
+                  <small
+                    ngbDropdownItem
+                    (click)="
+                      openTestModal(
+                        testModal,
+                        'sendBiometricAuthenticatoinRequest'
+                      )
+                    "
+                    [disabled]="authBiometricFlag"
+                    class="sendReqOption"
+                  >
+                    <!-- (click)="sendBiometricAuthenticatoinRequest()" -->
+
+                    Authentication Request
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-6 col-md-3"
+              style="border: solid 0px red !important"
+            >
+              <div
+                class="ngdropdown"
+                ngbDropdown
+                style="border: solid 0px red !important"
+              >
+                <div
+                  class="icons orangebg"
+                  ngbDropdownToggle
+                  [ngStyle]="{
+                    'border-color':
+                      authMobileAppFlag && customerAuthenticatedFlag
+                        ? 'green'
+                        : enrollMobileAppFlag && customerEnrolledFlag
+                        ? 'orange'
+                        : 'red'
+                  }"
+                >
+                  <!-- 
+                  [ngStyle]="{
+                    'border-color':
+                      customerAuthenticatedFlag === true
+                        ? 'green'
+                        : enrollMobileAppFlag === true
+                        ? 'orange'
+                        : 'red'
+                  }" -->
+
+                  <div class="d-table-div">
+                    <div class="d-table-cell-div">
+                      <img
+                        src="https://lab.bravishma.com:4040/assets/images/mobile-app.png"
+                        alt=""
+                        class="img-fluid"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <p class="icontext">App</p>
+                <div class="ngdropdown" ngbDropdownMenu>
+                  <small
+                    ngbDropdownItem
+                    (click)="openTestModal(testModal, 'sdkEnroll')"
+                    [disabled]="enrollMobileAppFlag"
+                    class="sendReqOption"
+                  >
+                    <!-- (click)="sdkEnroll()" -->
+                    Enrollment Request</small
+                  >
+                  <small
+                    ngbDropdownItem
+                    [disabled]="authMobileAppFlag"
+                    (click)="openTestModal(testModal, 'sdkAuthentication')"
+                    class="sendReqOption"
+                  >
+                    <!-- (click)="sdkAuthentication()" -->
+                    Authentication Request
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-6 col-md-3"
+              style="border: solid 0px red !important"
+            >
+              <div
+                class="ngdropdown"
+                ngbDropdown
+                style="border: solid 0px red !important"
+              >
+                <div
+                  class="icons redbg"
+                  ngbDropdownToggle
+                  style="border-color: red"
+                >
+                  <div class="d-table-div">
+                    <div class="d-table-cell-div">
+                      <img
+                        src="https://lab.bravishma.com:4040/assets/images/voice.png"
+                        alt=""
+                        class="img-fluid"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <p class="icontext">Voice</p>
+                <div ngbDropdownMenu>
+                  <small ngbDropdownItem disabled class="sendReqOption">
+                    Enrollment Request</small
+                  >
+                  <small ngbDropdownItem disabled class="sendReqOption">
+                    Authentication Request
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <!-- test modal -->
+
+            <ng-template #testModal let-modal>
+              <div class="modal-header">
+                <h4 class="modal-title">Send Request Via</h4>
+                <!-- <button
+                    type="button"
+                    class="btn-close"
+                    aria-label="Close"
+                    (click)="modal.dismiss('Cross click')"
+                  ></button> -->
+              </div>
+              <div class="modal-body">
+                <div class="d-flex action-button">
+                  <div *ngFor="let item of functionNameArray; index as i">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-primary me-3"
+                      (click)="
+                        callFunctionArray(item); modal.close('Close click')
+                      "
+                      [disabled]="
+                        !isDevicePresentFlag && item == 'Push Notification'
+                      "
+                    >
+                      {{ item }}
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-secondary"
+                    (click)="modal.close('Close click')"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </ng-template>
+
+            <!-- end test modal -->
+          </div>
+        </div>
+
+        <a
+          (click)="openTestModal(testModal, 'sendSignatureRequest')"
+          class="btn-style"
+        >
+          <!-- (click)="sendSignatureRequest()" -->
+          <img
+            src="https://lab.bravishma.com:4040/assets/images/signature-icon.png"
+            alt=""
+          />
+          Digital Signature Request
+        </a>
+        <a
+          (click)="openCreditCardPaymentModal(PaymentModal)"
+          class="btn-style rounded-0"
+        >
+          <img
+            src="https://lab.bravishma.com:4040/assets/images/cc-card-icon.png"
+            alt=""
+          />
+          Credit Card Payment</a
+        >
+        <a
+          (click)="openOutboundNotificationModal(outboundNotificationModal)"
+          class="btn-style"
+        >
+          <img
+            src="https://lab.bravishma.com:4040/assets/images/notification-icon.png"
+            alt=""
+          />
+          Outbound Notification</a
+        >
+
+        <!-- open payment modal code  -->
+        <ng-template #PaymentModal let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title">Payment Request</h4>
+            <!-- <button
+              type="button"
+              class="btn-close"
+              aria-label="Close"
+              (click)="modal.dismiss('Cross click')"
+            ></button> -->
+          </div>
+          <div class="modal-body">
+            <div class="Payment-details">
+              <div class="desc fw-bold">
+                <label class="form-label">Description</label>
+
+                <div class="input-group mb-3">
+                  <input
+                    style="padding: 0.5rem; box-sizing: border-box"
+                    type="text"
+                    class="form-control"
+                    placeholder="Description"
+                    #desc
+                  />
+                </div>
+              </div>
+
+              <div class="desc mt-4">
+                <label class="form-label fw-bold">Cost</label>
+                <div class="input-group mb-3">
+                  <span class="input-group-text">$</span>
+                  <input type="text" class="form-control" #amount />
+                </div>
+              </div>
+            </div>
+
+            <div class="justify-content-start">
+              <div class="d-flex action-button">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary me-3"
+                  (click)="
+                    sendPaymentRequest(desc, amount, 'SMS');
+                    modal.close('Close click')
+                  "
+                >
+                  SMS
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary me-3"
+                  (click)="
+                    sendPaymentRequest(desc, amount, 'Push Notification');
+                    modal.close('Close click')
+                  "
+                  [disabled]="!isDevicePresentFlag"
+                >
+                  Push Notification
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary me-3"
+                  (click)="
+                    sendPaymentRequest(desc, amount, 'QR');
+                    modal.close('Close click')
+                  "
+                >
+                  QR
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary me-3"
+                  (click)="
+                    sendPaymentRequest(desc, amount, 'Email');
+                    modal.close('Close click')
+                  "
+                >
+                  Email
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-sm btn-secondary"
+                  (click)="modal.close('Close click')"
+                >
+                  Close
+                </button>
+
+                <!-- <button
+                  type="button"
+                  class="btn btn-sm btn-secondary"
+                  (click)="modal.close('Close click')"
+                >
+                  Cancel
+                </button> -->
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <!-- payment modal code  end -->
+
+        <!-- Send outbound notification modal open -->
+
+        <ng-template #outboundNotificationModal let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title">Outbound Notification</h4>
+            <!-- <button
+              type="button"
+              class="btn-close"
+              aria-label="Close"
+              (click)="modal.dismiss('Cross click')"
+            ></button> -->
+          </div>
+          <div class="modal-body">
+            <div class="Payment-details">
+              <div class="desc fw-bold">
+                <label class="form-label">Reason</label>
+                <input
+                  style="padding: 0.5rem"
+                  type="text"
+                  class="form-control"
+                  placeholder="Reason for outbound notification"
+                  #reason
+                />
+              </div>
+            </div>
+
+            <div class="justify-content-start mt-4">
+              <div class="d-flex action-button">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary me-3"
+                  (click)="
+                    sendOutboundNotificatoin(reason, 'SMS');
+                    modal.close('Close click')
+                  "
+                >
+                  SMS
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary me-3"
+                  (click)="
+                    sendOutboundNotificatoin(reason, 'Push Notification');
+                    modal.close('Close click')
+                  "
+                  [disabled]="!isDevicePresentFlag"
+                >
+                  Push Notification
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary me-3"
+                  (click)="
+                    sendOutboundNotificatoin(reason, 'QR');
+                    modal.close('Close click')
+                  "
+                >
+                  QR
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary me-3"
+                  (click)="
+                    sendOutboundNotificatoin(reason, 'Email');
+                    modal.close('Close click')
+                  "
+                >
+                  Email
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-sm btn-secondary"
+                  (click)="modal.close('Close click')"
+                >
+                  Close
+                </button>
+
+                <!-- <button
+                  type="button"
+                  class="btn btn-primary me-3"
+                  (click)="
+                    sendOutboundNotificatoin(reason); modal.close('Close click')
+                  "
+                >
+                  Send Request
+                </button>
+  
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="modal.close('Close click')"
+                >
+                  Cancel
+                </button> -->
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <!-- Send outbound notification modal close -->
+      </div>
+
+      <div>
+        <img
+          style="width: 80px; margin-left: 10px"
+          src="https://lab.bravishma.com:4040/assets/images/secured-by-journey-navy.svg"
+        />
+      </div>
+
+      <!-- push notification QR scan & email modal -->
+
+      <!--  <ng-template #SendRequestMoal let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title">Send Request Options</h4>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex action-button">
+            <button
+              type="button"
+              class="btn btn-sm btn-primary me-3"
+              (click)="sendSignatureRequest(); modal.close('Close click')"
+            >
+              Send SMS
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary me-3"
+              (click)="
+                sendSignatureRequest();
+                modal.close()
+              "
+            >
+              Send Push Notification
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-sm btn-primary me-3"
+              (click)="sendSignatureRequest(); modal.close('Close click')"
+            >
+              Send QR
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary me-3"
+              (click)="
+                sendSignatureRequest(); modal.close('Close click')
+              "
+            >
+              Send Email
+            </button>
+
+          
+          </div>
+        </div>
+      </ng-template>-->
+      <!-- end modal -->
+
+      <!-- send co browse url buttons   -->
+      <!-- <div style="justify-content: center">
+          <a
+            style="margin: 7px"
+            (click)="sendCobrowseUrlToCustomer()"
+            class="btn-style"
+          >
+            <svg
+              width="13"
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="far"
+              data-icon="paper-plane"
+              class="svg-inline--fa fa-paper-plane _Icon_1n7rb_11"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+              [ngStyle]="{ color: processIconColor }"
+            >
+              <path
+                fill="currentColor"
+                d="M501.6 4.186c-7.594-5.156-17.41-5.594-25.44-1.063L12.12 267.1C4.184 271.7-.5037 280.3 .0431 289.4c.5469 9.125 6.234 17.16 14.66 20.69l153.3 64.38v113.5c0 8.781 4.797 16.84 12.5 21.06C184.1 511 188 512 191.1 512c4.516 0 9.038-1.281 12.99-3.812l111.2-71.46l98.56 41.4c2.984 1.25 6.141 1.875 9.297 1.875c4.078 0 8.141-1.031 11.78-3.094c6.453-3.625 10.88-10.06 11.95-17.38l64-432C513.1 18.44 509.1 9.373 501.6 4.186zM369.3 119.2l-187.1 208.9L78.23 284.7L369.3 119.2zM215.1 444v-49.36l46.45 19.51L215.1 444zM404.8 421.9l-176.6-74.19l224.6-249.5L404.8 421.9z"
+              ></path>
+            </svg>
+            Send Co-browse URL</a
+          >
+          <a style="margin: 4px 7px" class="btn-style">
+            <svg
+              width="13"
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="far"
+              data-icon="paper-plane"
+              class="svg-inline--fa fa-paper-plane _Icon_1n7rb_11"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+              [ngStyle]="{ color: processIconColor }"
+            >
+              <path
+                fill="currentColor"
+                d="M501.6 4.186c-7.594-5.156-17.41-5.594-25.44-1.063L12.12 267.1C4.184 271.7-.5037 280.3 .0431 289.4c.5469 9.125 6.234 17.16 14.66 20.69l153.3 64.38v113.5c0 8.781 4.797 16.84 12.5 21.06C184.1 511 188 512 191.1 512c4.516 0 9.038-1.281 12.99-3.812l111.2-71.46l98.56 41.4c2.984 1.25 6.141 1.875 9.297 1.875c4.078 0 8.141-1.031 11.78-3.094c6.453-3.625 10.88-10.06 11.95-17.38l64-432C513.1 18.44 509.1 9.373 501.6 4.186zM369.3 119.2l-187.1 208.9L78.23 284.7L369.3 119.2zM215.1 444v-49.36l46.45 19.51L215.1 444zM404.8 421.9l-176.6-74.19l224.6-249.5L404.8 421.9z"
+              ></path>
+            </svg>
+            Send Co-browse URL SMS</a
+          >
+        </div> -->
+
+      <!-- end of co browse url -->
+    </div>
+    <div class="w-50 right-bg" style="overflow-y: scroll">
+      <!-- show accordian cards  -->
+      <!-- <div class="p-4 p-sm-3 p-md-4" *ngIf="sendAuthRequestFlag"> -->
+
+      <!-- {{ mobileNumber }} -->
+      <!-- <div class="p-4 p-sm-3 p-md-2" style="height: 540px; overflow-y: scroll"> -->
+
+      <div
+        class="alert alert-secondary text-center"
+        style="
+          width: 99%;
+          margin: 2px auto;
+          height: 28px;
+          font-size: 15px;
+          padding: 1px;
+        "
+        role="alert"
+      >
+        Status Update
+      </div>
+      <!-- single accordian start -->
+      <!-- <div
+        class="p-4 p-sm-1 p-md-1"
+        style="height: 100%"
+        *ngIf="sendAuthRequestFlag"
+      >
+        
+        <div class="mb-2 mt-3">
+          <div ngbAccordion>
+            <div ngbAccordionItem [collapsed]="false">
+              <div ngbAccordionHeader>
+                <button ngbAccordionButton>
+                  <span
+                    style="margin-left: 30%; width: 50%"
+                    [ngStyle]="{
+                      'background-color':
+                        processLabelBGColor == null
+                          ? 'gray'
+                          : processLabelBGColor
+                    }"
+                    class="fw-bold p-2 text-wrap position-absolute top-0 translate-middle text-dark badge rounded-pill"
+                  >
+                    <svg
+                      width="11"
+                      aria-hidden="true"
+                      focusable="false"
+                      data-prefix="far"
+                      data-icon="paper-plane"
+                      class="svg-inline--fa fa-paper-plane _Icon_1n7rb_11"
+                      role="img"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 512 512"
+                      [ngStyle]="{ color: processIconColor }"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M501.6 4.186c-7.594-5.156-17.41-5.594-25.44-1.063L12.12 267.1C4.184 271.7-.5037 280.3 .0431 289.4c.5469 9.125 6.234 17.16 14.66 20.69l153.3 64.38v113.5c0 8.781 4.797 16.84 12.5 21.06C184.1 511 188 512 191.1 512c4.516 0 9.038-1.281 12.99-3.812l111.2-71.46l98.56 41.4c2.984 1.25 6.141 1.875 9.297 1.875c4.078 0 8.141-1.031 11.78-3.094c6.453-3.625 10.88-10.06 11.95-17.38l64-432C513.1 18.44 509.1 9.373 501.6 4.186zM369.3 119.2l-187.1 208.9L78.23 284.7L369.3 119.2zM215.1 444v-49.36l46.45 19.51L215.1 444zM404.8 421.9l-176.6-74.19l224.6-249.5L404.8 421.9z"
+                      ></path>
+                    </svg>
+
+                    <small
+                      style="font-size: 10px"
+                      class="ms-1"
+                      [ngStyle]="{ color: processLabelColor }"
+                      >{{ processLabelName }}
+                  
+                    </small>
+                  </span>
+
+                  <small style="margin: 15px 1px 8px 1px; font-size: 12px">
+                  
+                    {{ requestNotificationName }}
+                   
+                  </small>
+                </button>
+              </div>
+              <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                  <ng-template>
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex">
+                          <svg
+                            aria-hidden="true"
+                            focusable="false"
+                            data-prefix="far"
+                            data-icon="circle-info"
+                            class="svg-inline--fa fa-circle-info text-gray-600 text-start"
+                            role="img"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                            style="width: 11px !important"
+                          >
+                            <path
+                              fill="currentColor"
+                              d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 464c-114.7 0-208-93.31-208-208S141.3 48 256 48s208 93.31 208 208S370.7 464 256 464zM296 336h-16V248C280 234.8 269.3 224 256 224H224C210.8 224 200 234.8 200 248S210.8 272 224 272h8v64h-16C202.8 336 192 346.8 192 360S202.8 384 216 384h80c13.25 0 24-10.75 24-24S309.3 336 296 336zM256 192c17.67 0 32-14.33 32-32c0-17.67-14.33-32-32-32S224 142.3 224 160C224 177.7 238.3 192 256 192z"
+                            ></path>
+                          </svg>
+                          <small
+                            style="font-size: 10px"
+                            class="ms-1 text-secondary text-start"
+                          >
+                            Sent via SMS to
+                            {{ authRequestedData?.delivery.phoneNumber }}
+                          </small>
+                        </div>
+                      </div>
+                      <small class="col-3">
+                        <small style="font-size: 10px" class="text-end"
+                          >just now</small
+                        >
+                      </small>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <!-- single accordian end -->
+
+      <!-- mutiple accordian start -->
+      <div class="p-4 p-sm-1 p-md-1" style="height: 100%">
+        <!-- *ngIf="sendAuthRequestFlag" -->
+        <div class="mb-2 mt-3">
+          <div
+            class="mb-2 mt-3"
+            ngbAccordion
+            *ngFor="let item of accordianArray; index as i"
+          >
+            <div ngbAccordionItem [collapsed]="false">
+              <div ngbAccordionHeader>
+                <button ngbAccordionButton>
+                  <span
+                    style="margin-left: 30%; width: 50%"
+                    [ngStyle]="{
+                      'background-color':
+                        item?.statusCSS.processLabelBGColor == null
+                          ? 'gray'
+                          : item?.statusCSS.processLabelBGColor
+                    }"
+                    class="fw-bold p-2 text-wrap position-absolute top-0 translate-middle text-dark badge rounded-pill"
+                  >
+                    <svg
+                      width="11"
+                      aria-hidden="true"
+                      focusable="false"
+                      data-prefix="far"
+                      data-icon="paper-plane"
+                      class="svg-inline--fa fa-paper-plane _Icon_1n7rb_11"
+                      role="img"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 512 512"
+                      [ngStyle]="{ color: item?.statusCSS.processIconColor }"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M501.6 4.186c-7.594-5.156-17.41-5.594-25.44-1.063L12.12 267.1C4.184 271.7-.5037 280.3 .0431 289.4c.5469 9.125 6.234 17.16 14.66 20.69l153.3 64.38v113.5c0 8.781 4.797 16.84 12.5 21.06C184.1 511 188 512 191.1 512c4.516 0 9.038-1.281 12.99-3.812l111.2-71.46l98.56 41.4c2.984 1.25 6.141 1.875 9.297 1.875c4.078 0 8.141-1.031 11.78-3.094c6.453-3.625 10.88-10.06 11.95-17.38l64-432C513.1 18.44 509.1 9.373 501.6 4.186zM369.3 119.2l-187.1 208.9L78.23 284.7L369.3 119.2zM215.1 444v-49.36l46.45 19.51L215.1 444zM404.8 421.9l-176.6-74.19l224.6-249.5L404.8 421.9z"
+                      ></path>
+                    </svg>
+
+                    <small
+                      style="font-size: 10px"
+                      class="ms-1"
+                      [ngStyle]="{ color: item?.statusCSS.processLabelColor }"
+                      >{{ item?.stausDetails.status }}
+                      <!-- Requested -->
+                    </small>
+                  </span>
+
+                  <small style="margin: 15px 1px 8px 1px; font-size: 12px">
+                    <!-- {{ authRequestedData?.pipeline.title }} -->
+                    {{ item?.stausDetails.title }}
+                    <!-- Digital Signature Request - Free Waiver -->
+                  </small>
+                </button>
+              </div>
+              <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                  <ng-template>
+                    <div class="d-flex justify-content-between">
+                      <div class="col-8">
+                        <div class="d-flex">
+                          <svg
+                            aria-hidden="true"
+                            focusable="false"
+                            data-prefix="far"
+                            data-icon="circle-info"
+                            class="svg-inline--fa fa-circle-info text-gray-600 text-start"
+                            role="img"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                            style="width: 11px !important"
+                          >
+                            <path
+                              fill="currentColor"
+                              d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 464c-114.7 0-208-93.31-208-208S141.3 48 256 48s208 93.31 208 208S370.7 464 256 464zM296 336h-16V248C280 234.8 269.3 224 256 224H224C210.8 224 200 234.8 200 248S210.8 272 224 272h8v64h-16C202.8 336 192 346.8 192 360S202.8 384 216 384h80c13.25 0 24-10.75 24-24S309.3 336 296 336zM256 192c17.67 0 32-14.33 32-32c0-17.67-14.33-32-32-32S224 142.3 224 160C224 177.7 238.3 192 256 192z"
+                            ></path>
+                          </svg>
+                          <small
+                            style="font-size: 12px"
+                            class="ms-1 text-secondary text-start"
+                          >
+                            Sent via {{ item?.delivery?.method }} to
+                            <span *ngIf="item?.delivery?.deviceId"
+                              >{{ item?.delivery?.deviceId }}
+                            </span>
+                            <span *ngIf="item?.delivery?.url"
+                              >{{ item?.delivery?.url }}
+                            </span>
+                            <span *ngIf="item?.delivery?.email"
+                              >{{ item?.delivery?.email }}
+                            </span>
+                            <span *ngIf="item?.delivery?.phoneNumber"
+                              >{{ item?.delivery?.phoneNumber }}
+                            </span>
+                          </small>
+                        </div>
+                      </div>
+                      <small class="col-4 text-end">
+                        <small class="col-4">
+                          <small
+                            *ngIf="item?.stausDetails.completedAt == 'just now'"
+                            style="font-size: 10px"
+                          >
+                            just now
+                          </small>
+                          <small
+                            style="font-size: 10px"
+                            *ngIf="item?.stausDetails.completedAt"
+                          >
+                            {{
+                              item?.stausDetails.completedAt | date : "short"
+                            }}
+                          </small>
+                        </small>
+                        <!-- {{ item?.stausDetails.completedAt | date : "short" }} just now -->
+                      </small>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end multiple accordian -->
+    </div>
+  </div>
+</div>
+
+<!-- getting customer details using mongodb fetch -->
+<div class="row m-0 m-0">
+  <div class="col-sm-12">
+    <div class="mt-2" style="max-width: 520px; margin: 0 auto">
+      <div class="d-flex">
+        <input
+          type="text"
+          class="form-control w-75"
+          placeholder="Enter mobile number "
+          #mno
+          [(ngModel)]="mobileNumber"
+        />
+        <button
+          class="btn btn-primary w-25 ms-3"
+          (click)="getMongoDBResponse(mno.value)"
+        >
+          start
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end code -->

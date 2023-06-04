@@ -1,0 +1,897 @@
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+  crossorigin="anonymous"
+/>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+  crossorigin="anonymous"
+></script>
+
+<div
+  class="d-table-div position-absolute w-100 d-flex justify-content-center align-items-center flex-column"
+  style="z-index: 1; backdrop-filter: blur(10px)"
+  *ngIf="isLoading"
+>
+  <div class="spinner-border text-danger" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  Please wait ...
+</div>
+
+<div class="d-table-div">
+  <div class="d-table-cell-div">
+    <div class="whitebox clearfix">
+      <div class="row g-0 h-100">
+        <div class="col-sm-6 col-lg-4 boder-right left-bg h-100">
+          <div class="photo-box p-3 p-md-4">
+            <div class="row">
+              <div class="col-sm-12">
+                <div
+                  class="photo d-flex justify-content-center align-items-center"
+                  style="width: 70px !important; height: 70px !important"
+                >
+                  <div class="d-table-div">
+                    <div
+                      class="d-table-cell-div d-flex justify-content-center align-items-center"
+                      style="width: 70px; height: 70px"
+                    >
+                      <img
+                        src="https://lab.bravishma.com:6500/assets/images/photo.png"
+                        class="img-fluid w-50 h-50"
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="pro-details">
+                  <h1
+                    class="name"
+                    style="font-size: 18px !important"
+                    *ngIf="
+                      sessionBootstrapData?.firstName &&
+                      sessionBootstrapData?.lastName
+                    "
+                  >
+                    {{
+                      sessionBootstrapData?.firstName +
+                        " " +
+                        sessionBootstrapData?.lastName
+                    }}
+                  </h1>
+                  <a
+                    href="mailto:christopher-brown@gmail.com"
+                    style="font-size: 12px"
+                    >{{ sessionBootstrapData?.email }}</a
+                  >
+                  <a href="tel:0121234567" style="font-size: 12px">{{
+                    sessionBootstrapData?.phoneNumber
+                  }}</a>
+                </div>
+              </div>
+              <div
+                class="mt-3 d-flex justify-content-between"
+                style="font-size: 14px; font-weight: 500"
+              >
+                <div
+                  class="alert bg-white p-1 py-0 mb-0 rounded-0"
+                  style="width: auto !important; font-size: 10px !important"
+                  [ngClass]="
+                    customerEnrolledStatus ? 'text-success' : 'text-danger'
+                  "
+                >
+                  <span *ngIf="customerEnrolledStatus">ENROLLED</span>
+                  <span *ngIf="!customerEnrolledStatus">NOT ENROLLED</span>
+                </div>
+                <div
+                  class="alert bg-white p-1 py-0 mb-0 rounded-0"
+                  style="width: auto !important; font-size: 10px !important"
+                  [ngClass]="
+                    customerAuthenticatedFlag ? 'text-success' : 'text-danger'
+                  "
+                >
+                  <span *ngIf="customerAuthenticatedFlag">AUTHENTICATED</span>
+                  <span *ngIf="!customerAuthenticatedFlag"
+                    >NOT AUTHENTICATED</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div
+            class="ps-3 pe-3 ps-md-4 pe-md-4 mt-2 mt-md-3 d-flex flex-column align-items-center"
+          >
+            <div>
+              <div class="d-flex">Enrolled &nbsp;</div>
+            </div>
+            <div>
+              <div class="d-flex">
+                Authenticated &nbsp;
+                <div
+                  class="alert p-1 py-0"
+                  style="width: auto !important"
+                  [ngClass]="
+                    customerAuthenticatedFlag ? 'alert-success' : 'alert-danger'
+                  "
+                >
+                  <span *ngIf="customerAuthenticatedFlag">YES</span>
+                  <span *ngIf="!customerAuthenticatedFlag">NO</span>
+                </div>
+              </div>
+            </div>
+          </div> -->
+          <div class="ps-3 pe-3 pb-3 ps-md-4 pe-md-4 pb-md-4">
+            <div class="row">
+              <div class="col-sm-12">
+                <div
+                  class="iconbox"
+                  style="margin: 20px 0px 40px 0px !important"
+                >
+                  <div class="d-flex justify-content-between">
+                    <div
+                      class="col-6 col-md-3 p-0 m-0"
+                      ngbDropdown
+                      role="button"
+                      style="
+                        background: transparent !important;
+                        border: 0px !important;
+                        width: 21%;
+                      "
+                    >
+                      <!-- -->
+                      <div
+                        class="icons greenbg"
+                        style="width: 45px !important; height: 45px !important"
+                        ngbDropdownToggle
+                        [ngStyle]="{
+                          'border-color':
+                            authFacialFlag && customerAuthenticatedFlag
+                              ? 'green'
+                              : enrollFacialFlag && customerEnrolledFlag
+                              ? 'orange'
+                              : 'red'
+                        }"
+                      >
+                        <div class="d-table-div">
+                          <div class="d-table-cell-div">
+                            <img
+                              src="https://lab.bravishma.com:6500/assets/images/face-recognition.png"
+                              alt=""
+                              class="img-fluid"
+                              style="width: 70%"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <p class="icontext" style="font-size: 10px !important">
+                        Facial
+                      </p>
+                      <div ngbDropdownMenu>
+                        <small
+                          ngbDropdownItem
+                          (click)="
+                            openTestModal(
+                              testModal,
+                              'sendFacialEnrollmentRequest'
+                            )
+                          "
+                          [disabled]="enrollFacialFlag"
+                          class="sendReqOption"
+                        >
+                          <!-- (click)="sendFacialEnrollmentRequest()" -->
+                          Enrollment Request</small
+                        >
+                        <small
+                          ngbDropdownItem
+                          [disabled]="authFacialFlag"
+                          (click)="
+                            openTestModal(testModal, 'sendFacialAuthRequest')
+                          "
+                          class="sendReqOption"
+                        >
+                          <!-- (click)="sendFacialAuthRequest()" -->
+                          Authentication Request
+                        </small>
+                      </div>
+                    </div>
+                    <div
+                      class="col-6 col-md-3 p-0 m-0"
+                      ngbDropdown
+                      role="button"
+                      style="
+                        background: transparent !important;
+                        border: 0px !important;
+                        width: 21%;
+                      "
+                    >
+                      <div
+                        class="icons yellowbg"
+                        style="width: 45px !important; height: 45px !important"
+                        ngbDropdownToggle
+                        [ngStyle]="{
+                          'border-color':
+                            authBiometricFlag && customerAuthenticatedFlag
+                              ? 'green'
+                              : enrollBiometricFlag && customerEnrolledFlag
+                              ? 'orange'
+                              : 'red'
+                        }"
+                      >
+                        <div class="d-table-div">
+                          <div class="d-table-cell-div">
+                            <img
+                              src="https://lab.bravishma.com:6500/assets/images/biometric.png"
+                              alt=""
+                              class="img-fluid"
+                              style="width: 70%"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <p class="icontext" style="font-size: 10px !important">
+                        Device
+                      </p>
+                      <div class="ngdropdown" ngbDropdownMenu>
+                        <small
+                          ngbDropdownItem
+                          (click)="
+                            openTestModal(
+                              testModal,
+                              'sendBiometricEnrollRequest'
+                            )
+                          "
+                          [disabled]="enrollBiometricFlag"
+                          class="sendReqOption"
+                        >
+                          <!-- (click)="sendBiometricEnrollRequest()" -->
+                          Enrollment Request</small
+                        >
+                        <small
+                          ngbDropdownItem
+                          (click)="
+                            openTestModal(
+                              testModal,
+                              'sendBiometricAuthenticatoinRequest'
+                            )
+                          "
+                          [disabled]="authBiometricFlag"
+                          class="sendReqOption"
+                        >
+                          <!-- (click)="sendBiometricAuthenticatoinRequest()" -->
+
+                          Authentication Request
+                        </small>
+                      </div>
+                    </div>
+                    <div
+                      class="col-6 col-md-3 p-0 m-0"
+                      ngbDropdown
+                      role="button"
+                      style="
+                        background: transparent !important;
+                        border: 0px !important;
+                        width: 21%;
+                      "
+                    >
+                      <div
+                        class="icons orangebg"
+                        style="width: 45px !important; height: 45px !important"
+                        ngbDropdownToggle
+                        [ngStyle]="{
+                          'border-color':
+                            authMobileAppFlag && customerAuthenticatedFlag
+                              ? 'green'
+                              : enrollMobileAppFlag && customerEnrolledFlag
+                              ? 'orange'
+                              : 'red'
+                        }"
+                      >
+                        <div class="d-table-div">
+                          <div class="d-table-cell-div">
+                            <img
+                              src="https://lab.bravishma.com:6500/assets/images/mobile-app.png"
+                              alt=""
+                              class="img-fluid"
+                              style="width: 70%"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <p class="icontext" style="font-size: 10px !important">
+                        App
+                      </p>
+                      <div class="ngdropdown" ngbDropdownMenu>
+                        <small
+                          ngbDropdownItem
+                          (click)="openTestModal(testModal, 'sdkEnroll')"
+                          [disabled]="enrollMobileAppFlag"
+                          class="sendReqOption"
+                        >
+                          <!-- (click)="sdkEnroll()" -->
+                          Enrollment Request</small
+                        >
+                        <small
+                          ngbDropdownItem
+                          [disabled]="authMobileAppFlag"
+                          (click)="
+                            openTestModal(testModal, 'sdkAuthentication')
+                          "
+                          class="sendReqOption"
+                        >
+                          <!-- (click)="sdkAuthentication()" -->
+                          Authentication Request
+                        </small>
+                      </div>
+                    </div>
+                    <div
+                      class="col-6 col-md-3 p-0 m-0"
+                      ngbDropdown
+                      role="button"
+                      style="
+                        background: transparent !important;
+                        border: 0px !important;
+                        width: 21%;
+                      "
+                    >
+                      <div
+                        class="icons redbg"
+                        ngbDropdownToggle
+                        style="
+                          border-color: red;
+                          width: 45px !important;
+                          height: 45px !important;
+                        "
+                      >
+                        <div class="d-table-div">
+                          <div class="d-table-cell-div">
+                            <img
+                              src="https://lab.bravishma.com:6500/assets/images/voice.png"
+                              alt=""
+                              class="img-fluid"
+                              style="width: 70%"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <p class="icontext" style="font-size: 10px !important">
+                        Voice
+                      </p>
+                      <div ngbDropdownMenu>
+                        <small ngbDropdownItem disabled class="sendReqOption">
+                          Enrollment Request</small
+                        >
+                        <small ngbDropdownItem disabled class="sendReqOption">
+                          Authentication Request
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <a
+                  class="btn-style"
+                  style="font-size: 12px !important"
+                  (click)="openTestModal(testModal, 'sendSignatureRequest')"
+                  ><img
+                    src="https://lab.bravishma.com:6500/assets/images/signature-icon.png"
+                    alt=""
+                  />
+                  Digital Signature Request</a
+                >
+                <a
+                  class="btn-style"
+                  (click)="openCreditCardPaymentModal(PaymentModal)"
+                  style="font-size: 12px !important"
+                  ><img
+                    src="https://lab.bravishma.com:6500/assets/images/cc-card-icon.png"
+                    alt=""
+                  />
+                  Credit Card Payment</a
+                >
+                <a
+                  class="btn-style"
+                  (click)="
+                    openOutboundNotificationModal(outboundNotificationModal)
+                  "
+                  style="font-size: 12px !important"
+                  ><img
+                    src="https://lab.bravishma.com:6500/assets/images/notification-icon.png"
+                    alt=""
+                  />
+                  Outbound Notification</a
+                >
+                <!-- Text Model -->
+                <ng-template #testModal let-modal>
+                  <div
+                    class="modal-header"
+                    style="
+                      border-radius: 0 !important;
+                      border-bottom: 0.5px solid gray !important;
+                      padding-bottom: 23px;
+                      background: white !important;
+                    "
+                  >
+                    <h6 class="modal-title" style="font-size: 17px !important">
+                      Send Request Via
+                    </h6>
+                  </div>
+                  <div class="modal-body" style="overflow-y: hidden !important">
+                    <div class="d-flex action-button justify-content-between">
+                      <div *ngFor="let item of functionNameArray; index as i">
+                        <button
+                          type="button"
+                          class="btn-style btn-sm"
+                          (click)="
+                            callFunctionArray(item); modal.close('Close click')
+                          "
+                          [disabled]="
+                            !isDevicePresentFlag && item == 'Push Notification'
+                          "
+                          [ngStyle]="{
+                            width: item == 'Push Notification' ? 'auto' : '70px'
+                          }"
+                          style="
+                            font-size: 12px !important;
+                            padding: 7px 9px !important;
+                          "
+                        >
+                          {{ item }}
+                        </button>
+                      </div>
+                      <button
+                        type="button"
+                        class="btn-style btn-sm"
+                        (click)="modal.close('Close click')"
+                        style="
+                          width: 70px;
+                          font-size: 12px !important;
+                          padding: 7px 9px !important;
+                        "
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </ng-template>
+
+                <!-- Payment Model -->
+                <ng-template #PaymentModal let-modal>
+                  <div
+                    class="modal-header"
+                    style="
+                      border-radius: 0 !important;
+                      border-bottom: 0.5px solid gray !important;
+                      padding-bottom: 23px;
+                      background: white !important;
+                    "
+                  >
+                    <h6 class="modal-title" style="font-size: 17px !important">
+                      Payment Request
+                    </h6>
+                    <!-- <button
+                  type="button"
+                  class="btn-close"
+                  aria-label="Close"
+                  (click)="modal.dismiss('Cross click')"
+                ></button> -->
+                  </div>
+                  <div class="modal-body" style="overflow-y: hidden !important">
+                    <div class="Payment-details">
+                      <div class="desc fw-bold">
+                        <label class="form-label">Description</label>
+
+                        <div class="input-group mb-3">
+                          <input
+                            style="padding: 0.5rem"
+                            type="text"
+                            class="form-control"
+                            placeholder="Description"
+                            #desc
+                          />
+                        </div>
+                      </div>
+
+                      <div class="desc mt-4">
+                        <label class="form-label fw-bold">Cost</label>
+                        <div class="input-group mb-3">
+                          <span class="input-group-text">$</span>
+                          <input type="text" class="form-control" #amount />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="justify-content-start">
+                      <div class="d-flex action-button justify-content-between">
+                        <button
+                          type="button"
+                          class="btn-style btn-sm"
+                          (click)="
+                            sendPaymentRequest(desc, amount, 'SMS');
+                            modal.close('Close click')
+                          "
+                          style="
+                            width: 70px;
+                            font-size: 12px !important;
+                            padding: 7px 9px !important;
+                          "
+                        >
+                          SMS
+                        </button>
+                        <button
+                          type="button"
+                          class="btn-style btn-sm"
+                          style="
+                            font-size: 12px !important;
+                            padding: 7px 9px !important;
+                          "
+                          (click)="
+                            sendPaymentRequest(
+                              desc,
+                              amount,
+                              'Push Notification'
+                            );
+                            modal.close('Close click')
+                          "
+                          [disabled]="!isDevicePresentFlag"
+                        >
+                          Push Notification
+                        </button>
+                        <button
+                          type="button"
+                          class="btn-style btn-sm"
+                          (click)="
+                            sendPaymentRequest(desc, amount, 'QR');
+                            modal.close('Close click')
+                          "
+                          style="
+                            width: 70px;
+                            font-size: 12px !important;
+                            padding: 7px 9px !important;
+                          "
+                        >
+                          QR
+                        </button>
+                        <button
+                          type="button"
+                          class="btn-style btn-sm"
+                          (click)="
+                            sendPaymentRequest(desc, amount, 'Email');
+                            modal.close('Close click')
+                          "
+                          style="
+                            width: 70px;
+                            font-size: 12px !important;
+                            padding: 7px 9px !important;
+                          "
+                        >
+                          Email
+                        </button>
+
+                        <button
+                          type="button"
+                          class="btn-style btn-sm"
+                          (click)="modal.close('Close click')"
+                          style="
+                            width: 70px;
+                            font-size: 12px !important;
+                            padding: 7px 9px !important;
+                          "
+                        >
+                          Close
+                        </button>
+
+                        <!-- <button
+                      type="button"
+                      class="btn btn-sm btn-secondary"
+                      (click)="modal.close('Close click')"
+                    >
+                      Cancel
+                    </button> -->
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+
+                <!-- In bound notification Model -->
+                <ng-template #outboundNotificationModal let-modal>
+                  <div
+                    class="modal-header"
+                    style="
+                      border-radius: 0 !important;
+                      border-bottom: 0.5px solid gray !important;
+                      padding-bottom: 23px;
+                      background: white !important;
+                    "
+                  >
+                    <h6 class="modal-title" style="font-size: 17px !important">
+                      Outbound Notification
+                    </h6>
+                  </div>
+                  <div class="modal-body" style="overflow-y: hidden !important">
+                    <div class="Payment-details">
+                      <div class="desc fw-bold">
+                        <label class="form-label">Reason</label>
+                        <input
+                          style="padding: 0.5rem"
+                          type="text"
+                          class="form-control"
+                          placeholder="Reason for outbound notification"
+                          #reason
+                        />
+                      </div>
+                    </div>
+
+                    <div class="justify-content-start mt-4">
+                      <div class="d-flex action-button justify-content-between">
+                        <!-- <button
+                      type="button"
+                      class="btn-style btn-sm me-3"
+                      (click)="
+                        sendOutboundNotificatoin(reason, 'SMS');
+                        modal.close('Close click')
+                      "
+                      style="width: 70px"
+                    >
+                      SMS
+                    </button> -->
+                        <button
+                          type="button"
+                          class="btn-style btn-sm"
+                          (click)="sendOutboundNotificatoin(reason, 'SMS')"
+                          style="
+                            width: 70px;
+                            font-size: 12px !important;
+                            padding: 7px 9px !important;
+                          "
+                        >
+                          SMS
+                        </button>
+                        <button
+                          type="button"
+                          class="btn-style btn-sm"
+                          style="
+                            font-size: 12px !important;
+                            padding: 7px 9px !important;
+                          "
+                          (click)="
+                            sendOutboundNotificatoin(
+                              reason,
+                              'Push Notification'
+                            )
+                          "
+                          [disabled]="!isDevicePresentFlag"
+                        >
+                          Push Notification
+                        </button>
+                        <button
+                          type="button"
+                          class="btn-style btn-sm"
+                          (click)="sendOutboundNotificatoin(reason, 'QR')"
+                          style="
+                            width: 70px;
+                            font-size: 12px !important;
+                            padding: 7px 9px !important;
+                          "
+                        >
+                          QR
+                        </button>
+                        <button
+                          type="button"
+                          class="btn-style btn-sm"
+                          (click)="sendOutboundNotificatoin(reason, 'Email')"
+                          style="
+                            width: 70px;
+                            font-size: 12px !important;
+                            padding: 7px 9px !important;
+                          "
+                        >
+                          Email
+                        </button>
+
+                        <button
+                          type="button"
+                          class="btn-style btn-sm"
+                          style="
+                            width: 70px;
+                            font-size: 12px !important;
+                            padding: 7px 9px !important;
+                          "
+                          (click)="modal.close('Close click')"
+                        >
+                          Close
+                        </button>
+                      </div>
+
+                      <div class="action-button d-flex justify-content-center">
+                        <button
+                          type="button"
+                          class="btn-style btn-sm me-3"
+                          style="
+                            width: 140px;
+                            font-size: 12px !important;
+                            padding: 7px 9px !important;
+                          "
+                        >
+                          Call now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="col-sm-6 col-lg-8 right-bg"
+          style="height: 70vh !important; padding-bottom: 30px !important"
+        >
+          <div
+            class="h-100 d-flex align-items-center flex-column"
+            style="overflow-y: scroll"
+          >
+            <span
+              class="alert alert-secondary w-100 p-1 rounded-0 text-center"
+              style="font-size: 14px"
+              >Status Updates</span
+            >
+            <div
+              class="mb-4 mt-3"
+              style="width: 75%; height: 90px"
+              ngbAccordion
+              *ngFor="let item of accordianArray; index as i"
+            >
+              <div ngbAccordionItem [collapsed]="false">
+                <div ngbAccordionHeader>
+                  <button ngbAccordionButton>
+                    <span
+                      style="margin-left: 10%; width: 20%"
+                      [ngStyle]="{
+                        'background-color':
+                          item?.statusCSS.processLabelBGColor == null
+                            ? 'gray'
+                            : item?.statusCSS.processLabelBGColor
+                      }"
+                      class="fw-bold p-2 text-wrap position-absolute top-0 translate-middle text-dark badge rounded-pill"
+                    >
+                      <svg
+                        width="11"
+                        aria-hidden="true"
+                        focusable="false"
+                        data-prefix="far"
+                        data-icon="paper-plane"
+                        class="svg-inline--fa fa-paper-plane _Icon_1n7rb_11"
+                        role="img"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 512 512"
+                        [ngStyle]="{ color: item?.statusCSS.processIconColor }"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M501.6 4.186c-7.594-5.156-17.41-5.594-25.44-1.063L12.12 267.1C4.184 271.7-.5037 280.3 .0431 289.4c.5469 9.125 6.234 17.16 14.66 20.69l153.3 64.38v113.5c0 8.781 4.797 16.84 12.5 21.06C184.1 511 188 512 191.1 512c4.516 0 9.038-1.281 12.99-3.812l111.2-71.46l98.56 41.4c2.984 1.25 6.141 1.875 9.297 1.875c4.078 0 8.141-1.031 11.78-3.094c6.453-3.625 10.88-10.06 11.95-17.38l64-432C513.1 18.44 509.1 9.373 501.6 4.186zM369.3 119.2l-187.1 208.9L78.23 284.7L369.3 119.2zM215.1 444v-49.36l46.45 19.51L215.1 444zM404.8 421.9l-176.6-74.19l224.6-249.5L404.8 421.9z"
+                        ></path>
+                      </svg>
+
+                      <small
+                        style="font-size: 10px"
+                        class="ms-1"
+                        [ngStyle]="{ color: item?.statusCSS.processLabelColor }"
+                        >{{ item?.stausDetails.status }}
+                        <!-- Requested -->
+                      </small>
+                    </span>
+
+                    <small
+                      style="
+                        margin: 10px 1px 5px 1px;
+                        font-size: 16px;
+                        font-weight: 600;
+                      "
+                      class="fs-bold"
+                    >
+                      <!-- {{ authRequestedData?.pipeline.title }} -->
+                      {{ item?.stausDetails.title }}
+                      <!-- Digital Signature Request - Free Waiver -->
+                    </small>
+                  </button>
+                </div>
+                <div ngbAccordionCollapse>
+                  <div ngbAccordionBody>
+                    <ng-template>
+                      <div class="d-flex justify-content-between">
+                        <div class="col-8">
+                          <div class="d-flex">
+                            <svg
+                              aria-hidden="true"
+                              focusable="false"
+                              data-prefix="far"
+                              data-icon="circle-info"
+                              class="svg-inline--fa fa-circle-info text-gray-600 text-start"
+                              role="img"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 512 512"
+                              style="width: 11px !important"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 464c-114.7 0-208-93.31-208-208S141.3 48 256 48s208 93.31 208 208S370.7 464 256 464zM296 336h-16V248C280 234.8 269.3 224 256 224H224C210.8 224 200 234.8 200 248S210.8 272 224 272h8v64h-16C202.8 336 192 346.8 192 360S202.8 384 216 384h80c13.25 0 24-10.75 24-24S309.3 336 296 336zM256 192c17.67 0 32-14.33 32-32c0-17.67-14.33-32-32-32S224 142.3 224 160C224 177.7 238.3 192 256 192z"
+                              ></path>
+                            </svg>
+                            <small
+                              style="font-size: 12px"
+                              class="ms-1 text-secondary text-start"
+                            >
+                              Sent via {{ item?.delivery?.method }} to
+                              <span *ngIf="item?.delivery?.deviceId"
+                                >{{ item?.delivery?.deviceId }}
+                              </span>
+                              <span *ngIf="item?.delivery?.url"
+                                >{{ item?.delivery?.url }}
+                              </span>
+                              <span *ngIf="item?.delivery?.email"
+                                >{{ item?.delivery?.email }}
+                              </span>
+                              <span *ngIf="item?.delivery?.phoneNumber"
+                                >{{ item?.delivery?.phoneNumber }}
+                              </span>
+                            </small>
+                          </div>
+                        </div>
+                        <small class="col-4 text-end">
+                          <small class="col-4">
+                            <small
+                              *ngIf="
+                                item?.stausDetails.completedAt === 'just now'
+                              "
+                              style="font-size: 10px"
+                            >
+                              just now
+                            </small>
+                            <small
+                              style="font-size: 10px"
+                              *ngIf="item?.stausDetails.completedAt"
+                            >
+                              {{ item?.stausDetails.completedAt }}
+                            </small>
+                          </small>
+                          <!-- {{ item?.stausDetails.completedAt | date : "short" }} just now -->
+                        </small>
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- getting customer details using mongodb fetch -->
+<div class="row m-0 m-0">
+  <div class="col-sm-12">
+    <div class="mt-2" style="max-width: 520px; margin: 0 auto">
+      <div class="d-flex">
+        <input
+          type="text"
+          class="form-control w-75"
+          placeholder="Enter mobile number "
+          #mno
+          [(ngModel)]="mobileNumber"
+        />
+        <button
+          class="btn btn-primary w-25 ms-3"
+          (click)="getMongoDBResponse(mno.value)"
+        >
+          start
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
