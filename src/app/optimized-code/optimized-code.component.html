@@ -79,7 +79,7 @@
                   class="alert bg-white p-1 py-0 mb-0 rounded-0"
                   style="width: auto !important; font-size: 10px !important"
                   [ngClass]="
-                  customerEnrolledFlag ? 'text-success' : 'text-danger'
+                    customerEnrolledFlag ? 'text-success' : 'text-danger'
                   "
                 >
                   <span *ngIf="customerEnrolledFlag">ENROLLED</span>
@@ -450,7 +450,6 @@
                     <h6 class="modal-title" style="font-size: 17px !important">
                       Payment Request
                     </h6>
-                    
                   </div>
                   <div class="modal-body" style="overflow-y: hidden !important">
                     <div class="Payment-details">
@@ -818,9 +817,13 @@
                             </small>
                             <small
                               style="font-size: 10px"
-                              *ngIf="item?.statusDetails.completedAt"
+                              *ngIf="
+                                item?.statusDetails.completedAt !== 'just now'
+                              "
                             >
-                              {{ item?.statusDetails.completedAt }}
+                              {{
+                                item?.statusDetails.completedAt | date : "short"
+                              }}
                             </small>
                           </small>
                           <!-- {{ item?.statusDetails.completedAt | date : "short" }} just now -->

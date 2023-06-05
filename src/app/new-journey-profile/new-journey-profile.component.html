@@ -10,7 +10,7 @@
   crossorigin="anonymous"
 ></script>
 
-<div
+<!-- <div
   class="d-table-div position-absolute w-100 d-flex justify-content-center align-items-center flex-column"
   style="z-index: 1; backdrop-filter: blur(10px)"
   *ngIf="isLoading"
@@ -19,7 +19,7 @@
     <span class="visually-hidden">Loading...</span>
   </div>
   Please wait ...
-</div>
+</div> -->
 
 <div class="d-table-div">
   <div class="d-table-cell-div">
@@ -79,11 +79,11 @@
                   class="alert bg-white p-1 py-0 mb-0 rounded-0"
                   style="width: auto !important; font-size: 10px !important"
                   [ngClass]="
-                    customerEnrolledStatus ? 'text-success' : 'text-danger'
+                    customerEnrolledFlag ? 'text-success' : 'text-danger'
                   "
                 >
-                  <span *ngIf="customerEnrolledStatus">ENROLLED</span>
-                  <span *ngIf="!customerEnrolledStatus">NOT ENROLLED</span>
+                  <span *ngIf="customerEnrolledFlag">ENROLLED</span>
+                  <span *ngIf="!customerEnrolledFlag">NOT ENROLLED</span>
                 </div>
                 <div
                   class="alert bg-white p-1 py-0 mb-0 rounded-0"
@@ -101,34 +101,12 @@
             </div>
           </div>
 
-          <!-- <div
-            class="ps-3 pe-3 ps-md-4 pe-md-4 mt-2 mt-md-3 d-flex flex-column align-items-center"
-          >
-            <div>
-              <div class="d-flex">Enrolled &nbsp;</div>
-            </div>
-            <div>
-              <div class="d-flex">
-                Authenticated &nbsp;
-                <div
-                  class="alert p-1 py-0"
-                  style="width: auto !important"
-                  [ngClass]="
-                    customerAuthenticatedFlag ? 'alert-success' : 'alert-danger'
-                  "
-                >
-                  <span *ngIf="customerAuthenticatedFlag">YES</span>
-                  <span *ngIf="!customerAuthenticatedFlag">NO</span>
-                </div>
-              </div>
-            </div>
-          </div> -->
           <div class="ps-3 pe-3 pb-3 ps-md-4 pe-md-4 pb-md-4">
             <div class="row">
               <div class="col-sm-12">
                 <div
                   class="iconbox"
-                  style="margin: 20px 0px 40px 0px !important"
+                  style="margin: 10px 0px 40px 0px !important"
                 >
                   <div class="d-flex justify-content-between">
                     <div
@@ -148,9 +126,9 @@
                         ngbDropdownToggle
                         [ngStyle]="{
                           'border-color':
-                            authFacialFlag && customerAuthenticatedFlag
+                            authFacialFlag && authFacialFlag
                               ? 'green'
-                              : enrollFacialFlag && customerEnrolledFlag
+                              : enrollFacialFlag || authFacialFlag
                               ? 'orange'
                               : 'red'
                         }"
@@ -213,9 +191,9 @@
                         ngbDropdownToggle
                         [ngStyle]="{
                           'border-color':
-                            authBiometricFlag && customerAuthenticatedFlag
+                            authBiometricFlag && authBiometricFlag
                               ? 'green'
-                              : enrollBiometricFlag && customerEnrolledFlag
+                              : enrollBiometricFlag || authBiometricFlag
                               ? 'orange'
                               : 'red'
                         }"
@@ -254,7 +232,7 @@
                           (click)="
                             openTestModal(
                               testModal,
-                              'sendBiometricAuthenticatoinRequest'
+                              'sendBiometricAuthenticationRequest'
                             )
                           "
                           [disabled]="authBiometricFlag"
@@ -282,9 +260,9 @@
                         ngbDropdownToggle
                         [ngStyle]="{
                           'border-color':
-                            authMobileAppFlag && customerAuthenticatedFlag
+                            authMobileAppFlag && authMobileAppFlag
                               ? 'green'
-                              : enrollMobileAppFlag && customerEnrolledFlag
+                              : enrollMobileAppFlag || authMobileAppFlag
                               ? 'orange'
                               : 'red'
                         }"
@@ -310,7 +288,6 @@
                           [disabled]="enrollMobileAppFlag"
                           class="sendReqOption"
                         >
-                          <!-- (click)="sdkEnroll()" -->
                           Enrollment Request</small
                         >
                         <small
@@ -321,7 +298,6 @@
                           "
                           class="sendReqOption"
                         >
-                          <!-- (click)="sdkAuthentication()" -->
                           Authentication Request
                         </small>
                       </div>
@@ -376,6 +352,7 @@
                   class="btn-style"
                   style="font-size: 12px !important"
                   (click)="openTestModal(testModal, 'sendSignatureRequest')"
+                  role="button"
                   ><img
                     src="https://lab.bravishma.com:6500/assets/images/signature-icon.png"
                     alt=""
@@ -384,6 +361,7 @@
                 >
                 <a
                   class="btn-style"
+                  role="button"
                   (click)="openCreditCardPaymentModal(PaymentModal)"
                   style="font-size: 12px !important"
                   ><img
@@ -394,6 +372,7 @@
                 >
                 <a
                   class="btn-style"
+                  role="button"
                   (click)="
                     openOutboundNotificationModal(outboundNotificationModal)
                   "
@@ -472,12 +451,6 @@
                     <h6 class="modal-title" style="font-size: 17px !important">
                       Payment Request
                     </h6>
-                    <!-- <button
-                  type="button"
-                  class="btn-close"
-                  aria-label="Close"
-                  (click)="modal.dismiss('Cross click')"
-                ></button> -->
                   </div>
                   <div class="modal-body" style="overflow-y: hidden !important">
                     <div class="Payment-details">
@@ -583,14 +556,6 @@
                         >
                           Close
                         </button>
-
-                        <!-- <button
-                      type="button"
-                      class="btn btn-sm btn-secondary"
-                      (click)="modal.close('Close click')"
-                    >
-                      Cancel
-                    </button> -->
                       </div>
                     </div>
                   </div>
@@ -627,21 +592,10 @@
 
                     <div class="justify-content-start mt-4">
                       <div class="d-flex action-button justify-content-between">
-                        <!-- <button
-                      type="button"
-                      class="btn-style btn-sm me-3"
-                      (click)="
-                        sendOutboundNotificatoin(reason, 'SMS');
-                        modal.close('Close click')
-                      "
-                      style="width: 70px"
-                    >
-                      SMS
-                    </button> -->
                         <button
                           type="button"
                           class="btn-style btn-sm"
-                          (click)="sendOutboundNotificatoin(reason, 'SMS')"
+                          (click)="sendOutboundNotification(reason, 'SMS')"
                           style="
                             width: 70px;
                             font-size: 12px !important;
@@ -658,7 +612,7 @@
                             padding: 7px 9px !important;
                           "
                           (click)="
-                            sendOutboundNotificatoin(
+                            sendOutboundNotification(
                               reason,
                               'Push Notification'
                             )
@@ -670,7 +624,7 @@
                         <button
                           type="button"
                           class="btn-style btn-sm"
-                          (click)="sendOutboundNotificatoin(reason, 'QR')"
+                          (click)="sendOutboundNotification(reason, 'QR')"
                           style="
                             width: 70px;
                             font-size: 12px !important;
@@ -682,7 +636,7 @@
                         <button
                           type="button"
                           class="btn-style btn-sm"
-                          (click)="sendOutboundNotificatoin(reason, 'Email')"
+                          (click)="sendOutboundNotification(reason, 'Email')"
                           style="
                             width: 70px;
                             font-size: 12px !important;
@@ -743,7 +697,7 @@
               class="mb-4 mt-3"
               style="width: 75%; height: 90px"
               ngbAccordion
-              *ngFor="let item of accordianArray; index as i"
+              *ngFor="let item of accordionArray; index as i"
             >
               <div ngbAccordionItem [collapsed]="false">
                 <div ngbAccordionHeader>
@@ -780,8 +734,7 @@
                         style="font-size: 10px"
                         class="ms-1"
                         [ngStyle]="{ color: item?.statusCSS.processLabelColor }"
-                        >{{ item?.stausDetails.status }}
-                        <!-- Requested -->
+                        >{{ item?.statusDetails.status }}
                       </small>
                     </span>
 
@@ -793,9 +746,7 @@
                       "
                       class="fs-bold"
                     >
-                      <!-- {{ authRequestedData?.pipeline.title }} -->
-                      {{ item?.stausDetails.title }}
-                      <!-- Digital Signature Request - Free Waiver -->
+                      {{ item?.statusDetails.title }}
                     </small>
                   </button>
                 </div>
@@ -845,7 +796,7 @@
                           <small class="col-4">
                             <small
                               *ngIf="
-                                item?.stausDetails.completedAt === 'just now'
+                                item?.statusDetails.completedAt === 'just now'
                               "
                               style="font-size: 10px"
                             >
@@ -853,12 +804,15 @@
                             </small>
                             <small
                               style="font-size: 10px"
-                              *ngIf="item?.stausDetails.completedAt"
+                              *ngIf="
+                                item?.statusDetails.completedAt !== 'just now'
+                              "
                             >
-                              {{ item?.stausDetails.completedAt }}
+                              {{
+                                item?.statusDetails.completedAt | date : "short"
+                              }}
                             </small>
                           </small>
-                          <!-- {{ item?.stausDetails.completedAt | date : "short" }} just now -->
                         </small>
                       </div>
                     </ng-template>
@@ -874,7 +828,7 @@
 </div>
 
 <!-- getting customer details using mongodb fetch -->
-<div class="row m-0 m-0">
+<!-- <div class="row m-0 m-0">
   <div class="col-sm-12">
     <div class="mt-2" style="max-width: 520px; margin: 0 auto">
       <div class="d-flex">
@@ -894,4 +848,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
