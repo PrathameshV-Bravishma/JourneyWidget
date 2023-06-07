@@ -20,6 +20,7 @@ import { NgbAccordionModule } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule } from "@angular/forms";
 import { NewJourneyProfileComponent } from "./new-journey-profile/new-journey-profile.component";
 import { OptimizedCodeComponent } from "./optimized-code/optimized-code.component";
+
 @NgModule({
   declarations: [
     AppComponent,

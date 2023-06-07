@@ -334,10 +334,7 @@ export class NewJourneyProfileComponent implements OnInit {
   counter = 0;
   isLoading: boolean = false;
 
-  lookUpDataFromAPI: any;
   lookUpEnrollArray: any[] = [];
-
-  authenticatedArray: any[] = [];
 
   enrollFacialFlag = false;
   enrollBiometricFlag = false;
@@ -401,7 +398,6 @@ export class NewJourneyProfileComponent implements OnInit {
 
   // ********* Send req through qr code, push notification *********
 
-  deviceDetails: any;
   deviceID: any;
   isDevicePresentFlag = false;
   requestName!: any;
@@ -414,9 +410,7 @@ export class NewJourneyProfileComponent implements OnInit {
   wsJSessionID: any;
   wsJOldData: any;
   wsJMobileNumber: any;
-  notificationAccordionArray: any[] = [];
   requestObject: any = {};
-  // accordionArray: any[] = [];
   accordionArray: any;
 
   requestArray: any[] = [];
@@ -441,6 +435,25 @@ export class NewJourneyProfileComponent implements OnInit {
   uniqueExeIDArray: any[] = [];
   uniqueCompletedRequestedArray: any;
 
+  // Color Objects
+  blueColorObject: any =  {
+    processLabelBGColor: "#DBEAFE",
+    processIconColor: "#1E40AF",
+    processLabelColor: "#1E40AF",
+  }
+
+  yellowColorObject: any = {
+    processLabelBGColor: "#FEF9C3",
+    processIconColor: "#854D0E",
+    processLabelColor: "#854D0E",
+  }
+
+  greenColorObject: any = {
+    processLabelBGColor: "#DCFCE7",
+    processIconColor: "#166534",
+    processLabelColor: "#166534",
+  }
+
   // --------------------
 
   constructor(
@@ -451,7 +464,7 @@ export class NewJourneyProfileComponent implements OnInit {
     private element: ElementRef
   ) {
     this.interactionId =
-      this.element.nativeElement.getAttribute("interactionid");
+      this.element.nativeElement.getAttribute('interactionid');
     this.widgetAPI = (<any>window).WS.widgetAPI(this.interactionId);
   }
   ngOnInit(): void {
@@ -463,14 +476,14 @@ export class NewJourneyProfileComponent implements OnInit {
     this.counter = 0;
     this.tokenFlagStartSession();
 
-    this.widgetAPI.onDataEvent("onInteractionEvent", (data: any) => {
+    this.widgetAPI.onDataEvent('onInteractionEvent', (data: any) => {
       this.interaction = data;
       // console.log('interaction: ', this.interaction);
       this.mobileNumber = this.interaction?.intrinsics.CALLER_NUMBER;
       // console.log('interaction mob no: ', this.mobileNumber);
       this.getMongoDBResponse(this.mobileNumber);
       this.agentName = this.interaction?.destinationAddress;
-      const splittedString = this.agentName?.split("@");
+      const splittedString = this.agentName?.split('@');
       // console.log(splittedString[0]);
       this.agentName = splittedString[0];
       this.changeDetectorRef.detectChanges();
@@ -480,10 +493,10 @@ export class NewJourneyProfileComponent implements OnInit {
 
     // // Media message data from chat, sms, email, social
 
-    this.widgetAPI.onDataEvent("onMediaMessageEvent", (data: any) => {
+    this.widgetAPI.onDataEvent('onMediaMessageEvent', (data: any) => {
       this.mediaMessage = data;
       this.mobileNumber = this.mediaMessage?.body.text;
-      this.checkMobileNumber = this.mobileNumber?.includes("+");
+      this.checkMobileNumber = this.mobileNumber?.includes('+');
       // console.log('onMediaMessageEvent mob number: ', this.mobileNumber);
 
       if (this.checkMobileNumber) {
@@ -497,7 +510,6 @@ export class NewJourneyProfileComponent implements OnInit {
 
   tokenFlagStartSession() {
     this.accordionArray = [];
-    this.notificationAccordionArray = [];
 
     this.jwtToken = this.httpService.signToken(this.agentName);
 
@@ -516,8 +528,9 @@ export class NewJourneyProfileComponent implements OnInit {
     ++this.counter;
 
     this.isLoading = true;
-    console.warn("counter: ", this.counter);
     this.lookUpEnrollArray = [];
+
+    // If counter is 1
     if (this.counter === 1) {
       this.enrollBiometricFlag = false;
       this.enrollMobileAppFlag = false;
@@ -527,17 +540,15 @@ export class NewJourneyProfileComponent implements OnInit {
       this.authBiometricFlag = false;
       this.authMobileAppFlag = false;
     }
-    this.authenticatedArray = [];
 
     // If mobileNo has '+' execute if statement
     if (mobileNo?.includes("+")) {
       this.httpService.getMongodbResponse(mobileNo).subscribe({
         next: (data: any) => {
-          // console.log('Mongodb res: ', data);
           this.isLoading = false;
           let res = data.documents[0];
 
-          if (res == undefined || res == null) {
+          if (!res) {
             this.userNotFoundFlag = true;
 
             this.getIDsObj = {
@@ -550,7 +561,6 @@ export class NewJourneyProfileComponent implements OnInit {
             this.getLookupDataFromAPI(mobileNo.split("+")[1]);
           } else {
             this.userNotFoundFlag = false;
-            console.log(" res of mongodb:  ", data, res);
 
             //  open old web socket
             this.wsJCustomerID = res?.journeyid_customerid;
@@ -561,8 +571,6 @@ export class NewJourneyProfileComponent implements OnInit {
 
             this.customerUniqueID = res?.journeyid_customer_uniqueid;
             this.journeyid_authenticated_flag = res?.journeyid_authenticated;
-
-            // console.log('auth flag: ', this.journeyid_authenticated_flag);
 
             this.customerAuthenticatedFlag =
               this.journeyid_authenticated_flag == "No" ? false : true;
@@ -605,7 +613,6 @@ export class NewJourneyProfileComponent implements OnInit {
     );
 
     setTimeout(() => {
-      console.log("dwewefwe");
       this.websocket_Service.wsData.subscribe({
         next: (response: any) => {
           console.log(response);
@@ -621,11 +628,7 @@ export class NewJourneyProfileComponent implements OnInit {
               exeID: {
                 execution_ID: response?.execution.id,
               },
-              statusCSS: {
-                processLabelBGColor: "#90ee90",
-                processIconColor: "#089000",
-                processLabelColor: "#089000",
-              },
+              statusCSS: this.greenColorObject,
               delivery: response?.delivery,
             };
 
@@ -673,21 +676,21 @@ export class NewJourneyProfileComponent implements OnInit {
               };
             } else if (type === "facial-enrollment") {
               this.requestObject.statusDetails = {
-                title: "Facial erollment Request",
+                title: "Facial enrollment Request",
                 status: "Completed",
                 mobno: this.wsJMobileNumber,
                 completedAt: response?.execution.completedAt,
               };
             } else if (type === "webauthn-registration") {
               this.requestObject.statusDetails = {
-                title: "Device erollment Request",
+                title: "Device enrollment Request",
                 status: "Completed",
                 mobno: this.wsJMobileNumber,
                 completedAt: response?.execution.completedAt,
               };
             } else if (type === "mobile-app") {
               this.requestObject.statusDetails = {
-                title: "App erollment Request",
+                title: "App enrollment Request",
                 status: "Completed",
                 mobno: this.wsJMobileNumber,
                 completedAt: response?.execution.completedAt,
@@ -714,11 +717,6 @@ export class NewJourneyProfileComponent implements OnInit {
             this.accordionArray.reverse();
           }
 
-          console.log("accordion array: ", this.accordionArray);
-          // this.notificationAccordionArray.forEach((obj: any, index: number) => {
-          //   console.log(`Noti ${index} `, obj);
-          // });
-
           // this.accordionArray.forEach((obj: any, index: number) => {
           //   console.log(`Acc ${index} `, obj);
           // });
@@ -730,33 +728,21 @@ export class NewJourneyProfileComponent implements OnInit {
   getLookupDataFromAPI(customerUniqueID: any) {
     this.httpService.getLookupCustomerData(customerUniqueID).subscribe({
       next: (LookupData: any) => {
-        console.log("LookupData: ", LookupData);
-
-        this.deviceDetails = LookupData?.devices[0];
-        this.deviceID = this.deviceDetails?.id;
-        if (this.deviceDetails) {
+        this.deviceID = LookupData?.devices[0]?.id;
+        if (LookupData?.devices[0]) {
           this.isDevicePresentFlag = true;
         }
-        // console.log('device flag: ', this.isDevicePresentFlag);
-        // console.log('device data: ', this.deviceDetails);
-        console.log("device id: ", this.deviceID);
 
-        this.lookUpDataFromAPI = LookupData?.enrollments;
-
-        this.lookUpDataFromAPI.filter((enroll: any) => {
+        console.log(LookupData?.enrollments);
+        LookupData?.enrollments.filter((enroll: any) => {
           this.lookUpEnrollArray = [...this.lookUpEnrollArray, enroll.type];
         });
 
-        // console.log('this.lookUpEnrollArray', this.lookUpEnrollArray);
-
         this.enrollFacialFlag =
           this.lookUpEnrollArray?.includes("facial-biometrics");
-        // console.log('enrollFacialFlag', this.enrollFacialFlag);
         this.enrollBiometricFlag = this.lookUpEnrollArray?.includes("webauthn");
-        // console.log('enrollBiometricFlag', this.enrollBiometricFlag);
         this.enrollMobileAppFlag =
           this.lookUpEnrollArray?.includes("mobile-app");
-        // console.log('enrollMobileAppFlag', this.enrollMobileAppFlag);
 
         if (
           this.enrollFacialFlag ||
@@ -787,13 +773,10 @@ export class NewJourneyProfileComponent implements OnInit {
       },
     };
     this.executionSessionExternalRef = this.getIDsObj.journeyExternalRef;
-    // console.warn('bootstrap start session req obj: ', reqData);
 
     this.httpService.createBootstrapSession(reqData, this.jwtToken).subscribe({
       next: (data: any) => {
         this.bootstrapData = data;
-
-        // console.log('get bootstrap data', this.bootstrapData);
 
         this.sessionBootstrapData = data.user;
         this.sessionBootstrapIsEnrolled = data.metadata.isEnrolled;
@@ -802,13 +785,6 @@ export class NewJourneyProfileComponent implements OnInit {
           user_ID: this.bootstrapData.user.id,
           session_ID: this.bootstrapData.session.id,
         };
-
-        // console.log(
-        //   'createJourneyBootstrapSession- web socket data: ',
-        //   this.websocketConnData
-        // );
-
-        // No name available
 
         if (
           (this.sessionBootstrapData.firstName &&
@@ -823,17 +799,10 @@ export class NewJourneyProfileComponent implements OnInit {
           if (!this.sessionBootstrapIsEnrolled) {
             this.customerEnrolledFlag = false;
           }
-
-          // console.log('not name avail: ', this.sessionBootstrapData);
         }
 
-        // this.createNewRequest();
-
         if (this.sessionBootstrapIsEnrolled) {
-          this.alertBoxColor = "#fc6a03";
-          this.RequestIconColor = "#fc6a03";
           this.customerEnrolledFlag = true;
-          this.RequestLabelColor = "#fc6a03";
         }
 
         // console.log(data);
@@ -850,9 +819,14 @@ export class NewJourneyProfileComponent implements OnInit {
   getLookupSessionDataFromAPI(sessionID: any) {
     this.httpService.getLookupSessionOfCustomer(sessionID).subscribe({
       next: (LookupData: any) => {
-        console.log("Session LookupData: ", LookupData);
-
         this.sessionLookupData = LookupData;
+
+        let authPipelineKey =
+          this.sessionLookupData?.executions[0].pipeline.key;
+
+        // console.log('authPipelineKey: ', authPipelineKey);
+
+        // console.log('stages: ', this.sessionLookupData?.executions);
 
         this.stageArray = this.sessionLookupData?.executions;
 
@@ -892,11 +866,11 @@ export class NewJourneyProfileComponent implements OnInit {
         Please complete the Enrollment process`
     );
 
-    this.requestNotificationName = "Facial erollment Request";
+    this.requestNotificationName = "Facial enrollment Request";
     this.isCustomerSendReqForEnroll = true;
-    let pipelineKey = "7214289b-47d8-4313-970a-567f8c0b685f";
-
-    let reqPayload = this.createPayloadRequest(pipelineKey);
+    let reqPayload = this.createPayloadRequest(
+      "7214289b-47d8-4313-970a-567f8c0b685f"
+    );
 
     this.executeRequest(reqPayload);
   }
@@ -907,17 +881,14 @@ export class NewJourneyProfileComponent implements OnInit {
         Please complete the Authentication process`
     );
 
-    // console.log('bootstrap data', this.bootstrapData);
     this.requestNotificationName = "Facial authentication Request";
-
     // let pipelineKey = 'd73d7733-5450-46a3-a1c7-42bf06e09ea0';
-    let pipelineKey = "dc2db844-c4a9-45fe-9316-44edd90b68dd";
-
-    let reqPayload = this.createPayloadRequest(pipelineKey);
+    let reqPayload = this.createPayloadRequest(
+      "dc2db844-c4a9-45fe-9316-44edd90b68dd"
+    );
 
     // isCustomerSendReqForAuth only for auth, it will change only auth requests
     this.isCustomerSendReqForAuth = true;
-    // console.log('exe payload: ', reqPayload);
 
     this.executeRequest(reqPayload);
   }
@@ -932,9 +903,10 @@ export class NewJourneyProfileComponent implements OnInit {
 
     this.requestNotificationName = "Device enrollment Request";
 
-    let pipelineKey = "e96e40a4-0ed3-4ff2-bd93-49a9061522cc";
     this.isCustomerSendReqForEnroll = true;
-    let reqPayload = this.createPayloadRequest(pipelineKey);
+    let reqPayload = this.createPayloadRequest(
+      "e96e40a4-0ed3-4ff2-bd93-49a9061522cc"
+    );
 
     this.executeRequest(reqPayload);
   }
@@ -946,14 +918,12 @@ export class NewJourneyProfileComponent implements OnInit {
     );
 
     this.requestNotificationName = "Device authentication Request";
-    // console.log('bootstrap data', this.bootstrapData);
 
-    let pipelineKey = "2eb2c038-6bdd-45ba-9eea-f97c3f17e138";
     // isCustomerSendReqForAuth only for auth, it will change only auth requests
     this.isCustomerSendReqForAuth = true;
-    let reqPayload = this.createPayloadRequest(pipelineKey);
-    console.log("Payload request: ", reqPayload);
-    // console.log('exe payload: ', reqPayload);
+    let reqPayload = this.createPayloadRequest(
+      "2eb2c038-6bdd-45ba-9eea-f97c3f17e138"
+    );
     this.executeRequest(reqPayload);
   }
 
@@ -964,29 +934,21 @@ export class NewJourneyProfileComponent implements OnInit {
         .subscribe({
           next: (data: any) => {
             console.log("Request data: ", data);
-            // console.log('Execution data: ', data);
             this.authRequestedData = { ...data };
             // url: 'https://secure.journeyid.io/s/Kd2BAgj';
 
             if (this.authRequestedData?.url) {
-              // console.log('sending QR url into chat');
               this.widgetAPI.sendChatMessage(this.authRequestedData?.url);
             }
 
-            console.log("acc array : ", this.accordionArray);
-
-            let requestObject: any = {
+            let requestObject = {
               wsEvent: null,
+              delivery: this.createDeliveryObject(this.sendRequestMode),
               exeID: {
                 execution_ID: this.authRequestedData.id,
               },
-              statusCSS: {
-                processLabelBGColor: "#ffd580",
-                processIconColor: "#fc6a03",
-                processLabelColor: "#fc6a03",
-              },
+              statusCSS: this.yellowColorObject,
               statusDetails: {
-                // title: 'Digital Signature Request 1',
                 title: this.requestNotificationName,
                 status: "Requested",
                 mobno: this.sessionBootstrapData?.phoneNumber,
@@ -994,37 +956,11 @@ export class NewJourneyProfileComponent implements OnInit {
               },
             };
 
-            // this.sendAuthRequestFlag = true;
-
-            // start mult acc req
-            console.log("Auth url: ", this.authRequestedData?.url);
-
-            if (this.sendRequestMode == "sms") {
-              requestObject.delivery = {
-                method: "sms",
-                phoneNumber: this.wsJMobileNumber,
-              };
-            } else if (this.sendRequestMode == "push-notification") {
-              requestObject.delivery = {
-                method: "push-notification",
-                deviceId: this.deviceID,
-              };
-            } else if (this.sendRequestMode == "email") {
-              requestObject.delivery = {
-                method: "email",
-                email: this.authRequestedData?.delivery.email,
-              };
-            } else if (this.sendRequestMode == "url") {
-              requestObject.delivery = {
-                method: "url",
-                url: this.authRequestedData?.url,
-              };
-            }
-
-            this.changeDetectorRef.detectChanges();
-
             this.accordionArray = [requestObject, ...this.accordionArray];
+            console.log("acc array : ", this.accordionArray);
             this.changeDetectorRef.detectChanges();
+
+            // step 4: Listening for Websocket events
 
             this.websocket_Service.connectWebSocket(
               this.authRequestedData.user.id,
@@ -1032,8 +968,14 @@ export class NewJourneyProfileComponent implements OnInit {
               `CONNECT ${this.jwtToken}`
             );
 
+            // console.log('ws user id: ', this.authRequestedData.user.id);
+            // console.log('ws session id: ', this.authRequestedData.session.id);
+
             this.websocket_Service.message.subscribe({
               next: (value: any) => {
+                // console.log('comp events: ', value);
+
+                // execution-completed
                 if (
                   (value.type === "close" || value.code === 1006) &&
                   this.webSocketEvents?.event !== "session-authenticated"
@@ -1069,9 +1011,10 @@ export class NewJourneyProfileComponent implements OnInit {
     );
 
     this.requestNotificationName = "App enrollment Request";
-    let pipelineKey = "060284b0-68dd-4c02-9534-7688d967b193";
     this.isCustomerSendReqForEnroll = true;
-    let reqPayload = this.createSDKPayload(pipelineKey);
+    let reqPayload = this.createSDKPayload(
+      "060284b0-68dd-4c02-9534-7688d967b193"
+    );
 
     setTimeout(() => {
       this.httpService
@@ -1088,38 +1031,22 @@ export class NewJourneyProfileComponent implements OnInit {
               this.widgetAPI.sendChatMessage(this.authRequestedData?.url);
             }
 
-            // start mult acc req
-
             this.requestObject = {
               wsEvent: null,
-            };
-
-            this.requestObject.exeID = {
-              execution_ID: this.authRequestedData.id,
-            };
-
-            this.requestObject.statusCSS = {
-              processLabelBGColor: "#ffd580",
-              processIconColor: "#fc6a03",
-              processLabelColor: "#fc6a03",
-            };
-
-            this.requestObject.statusDetails = {
-              // title: 'Digital Signature Request 1',
-              title: this.requestNotificationName,
-              status: "Requested",
-              // mobno: '+919146129322',
-              mobno: this.sessionBootstrapData?.phoneNumber,
-              completedAt: "just now",
+              delivery: this.createDeliveryObject(this.sendRequestMode),
+              exeID: {
+                execution_ID: this.authRequestedData.id,
+              },
+              statusCSS: this.yellowColorObject,
+              statusDetails: {
+                title: this.requestNotificationName,
+                status: "Requested",
+                mobno: this.sessionBootstrapData?.phoneNumber,
+                completedAt: "just now",
+              },
             };
 
             this.accordionArray = [this.requestObject, ...this.accordionArray];
-
-            // console.log('after added new request: ', this.accordionArray);
-
-            // step 4: Listening for Websocket events
-
-            // console.log('connecting web socket ');
 
             this.websocket_Service.connectWebSocket(
               this.authRequestedData.user.id,
@@ -1167,10 +1094,11 @@ export class NewJourneyProfileComponent implements OnInit {
     );
 
     this.requestNotificationName = "App authentication Request";
-    let pipelineKey = "6871934e-a546-4d9b-910b-2b566df42376";
     // isCustomerSendReqForAuth only for auth, it will change only auth requests
     this.isCustomerSendReqForAuth = true;
-    let reqPayload = this.createSDKPayload(pipelineKey);
+    let reqPayload = this.createSDKPayload(
+      "6871934e-a546-4d9b-910b-2b566df42376"
+    );
 
     setTimeout(() => {
       this.httpService
@@ -1186,32 +1114,22 @@ export class NewJourneyProfileComponent implements OnInit {
               this.widgetAPI.sendChatMessage(this.authRequestedData?.url);
             }
 
-            // start mult acc req
-
-            this.requestObject = {
+            let requestObject = {
               wsEvent: null,
+              delivery: this.createDeliveryObject(this.sendRequestMode),
+              exeID: {
+                execution_ID: this.authRequestedData.id,
+              },
+              statusCSS: this.yellowColorObject,
+              statusDetails: {
+                title: this.requestNotificationName,
+                status: "Requested",
+                mobno: this.sessionBootstrapData?.phoneNumber,
+                completedAt: "just now",
+              },
             };
 
-            this.requestObject.exeID = {
-              execution_ID: this.authRequestedData.id,
-            };
-
-            this.requestObject.statusCSS = {
-              processLabelBGColor: "#ffd580",
-              processIconColor: "#fc6a03",
-              processLabelColor: "#fc6a03",
-            };
-
-            this.requestObject.statusDetails = {
-              // title: 'Digital Signature Request 1',
-              title: this.requestNotificationName,
-              status: "Requested",
-              // mobno: '+919146129322',
-              mobno: this.sessionBootstrapData?.phoneNumber,
-              completedAt: "just now",
-            };
-
-            this.accordionArray = [this.requestObject, ...this.accordionArray];
+            this.accordionArray = [requestObject, ...this.accordionArray];
 
             // console.log('after added new request: ', this.accordionArray);
 
@@ -1265,9 +1183,9 @@ export class NewJourneyProfileComponent implements OnInit {
     );
     this.requestNotificationName = "Digital Signature Request";
 
-    let pipelineKey = "cfcfb607-8fb0-4ec1-9f80-4288cc573afb";
-
-    let reqPayload = this.createPayloadRequest(pipelineKey);
+    let reqPayload = this.createPayloadRequest(
+      "cfcfb607-8fb0-4ec1-9f80-4288cc573afb"
+    );
     // this.executeRequest(reqPayload);
     this.executeSignatureRequest(reqPayload);
   }
@@ -1287,63 +1205,24 @@ export class NewJourneyProfileComponent implements OnInit {
               this.widgetAPI.sendChatMessage(this.authRequestedData?.url);
             }
 
-            // this.sendAuthRequestFlag = true;
-
-            // start mult acc req
-
             console.log("Req data: ", this.authRequestedData.url);
 
-            this.requestObject = {
+            let requestObject = {
               wsEvent: null,
-            };
-            if (this.sendRequestMode == "sms") {
-              this.requestObject.delivery = {
-                method: "sms",
-                phoneNumber: this.wsJMobileNumber,
-              };
-            } else if (this.sendRequestMode == "push-notification") {
-              this.requestObject.delivery = {
-                method: "push-notification",
-                deviceId: this.deviceID,
-              };
-            } else if (this.sendRequestMode == "email") {
-              this.requestObject.delivery = {
-                method: "email",
-                deviceId: this.authRequestedData.delivery.email,
-              };
-            } else if (this.sendRequestMode == "url") {
-              this.requestObject.delivery = {
-                method: "url",
-                deviceId: this.authRequestedData?.url,
-              };
-            }
-
-            console.log("this.requestObject: ", this.requestObject);
-
-            this.requestObject.exeID = {
-              execution_ID: this.authRequestedData.id,
+              delivery: this.createDeliveryObject(this.sendRequestMode),
+              exeID: {
+                execution_ID: this.authRequestedData.id,
+              },
+              statusCSS: this.yellowColorObject,
+              statusDetails: {
+                title: this.requestNotificationName,
+                status: "Requested",
+                mobno: this.sessionBootstrapData?.phoneNumber,
+                completedAt: "just now",
+              },
             };
 
-            this.requestObject.statusCSS = {
-              processLabelBGColor: "#ffd580",
-              processIconColor: "#fc6a03",
-              processLabelColor: "#fc6a03",
-            };
-
-            this.requestObject.statusDetails = {
-              // title: 'Digital Signature Request 1',
-              title: this.requestNotificationName,
-              status: "Requested",
-              // mobno: '+919146129322',
-              mobno: this.sessionBootstrapData?.phoneNumber,
-              completedAt: "just now",
-            };
-
-            console.log(" this.requestObject: ", this.requestObject);
-
-            this.accordionArray = [this.requestObject, ...this.accordionArray];
-
-            console.log("after added new request: ", this.accordionArray);
+            this.accordionArray = [requestObject, ...this.accordionArray];
 
             // step 4: Listening for Websocket events
 
@@ -1394,7 +1273,7 @@ export class NewJourneyProfileComponent implements OnInit {
   }
 
   sendPaymentRequest(description: any, amount: any, requestType: any) {
-    this.setRequestType(requestType);
+    this.setRequestFlag(requestType);
 
     this.widgetAPI.sendChatMessage(
       `I have shared a credit card payment request via  ${this.sendRequestMode}.
@@ -1415,64 +1294,30 @@ export class NewJourneyProfileComponent implements OnInit {
             // console.log('Execution data: ', data);
 
             this.authRequestedData = data;
-            // this.addNewAccordianRequest(this.authRequestedData);
-            // this.addNewAccordianRequest(this.authRequestedData?.pipeline.title);
+
             if (this.authRequestedData?.url) {
               // console.log('sending QR url into chat');
               this.widgetAPI.sendChatMessage(this.authRequestedData?.url);
             }
 
-            // this.sendAuthRequestFlag = true;
-
-            // start mult acc req
-
-            this.requestObject = {
+            let requestObject = {
               wsEvent: null,
+              delivery: this.createDeliveryObject(this.sendRequestMode),
+              exeID: {
+                execution_ID: this.authRequestedData.id,
+              },
+              statusCSS: this.yellowColorObject,
+              statusDetails: {
+                // title: 'Digital Signature Request 1',
+                title: this.requestNotificationName,
+                status: "Requested",
+                // mobno: '+919146129322',
+                mobno: this.sessionBootstrapData?.phoneNumber,
+                completedAt: "just now",
+              },
             };
 
-            if (this.sendRequestMode == "sms") {
-              this.requestObject.delivery = {
-                method: "sms",
-                phoneNumber: this.wsJMobileNumber,
-              };
-            } else if (this.sendRequestMode == "push-notification") {
-              this.requestObject.delivery = {
-                method: "push-notification",
-                deviceId: this.deviceID,
-              };
-            } else if (this.sendRequestMode == "email") {
-              this.requestObject.delivery = {
-                method: "email",
-                deviceId: this.authRequestedData.delivery.email,
-              };
-            } else if (this.sendRequestMode == "url") {
-              this.requestObject.delivery = {
-                method: "url",
-                deviceId: this.authRequestedData?.url,
-              };
-            }
-
-            console.log("this.requestObject: ", this.requestObject);
-            this.requestObject.exeID = {
-              execution_ID: this.authRequestedData.id,
-            };
-
-            this.requestObject.statusCSS = {
-              processLabelBGColor: "#ffd580",
-              processIconColor: "#fc6a03",
-              processLabelColor: "#fc6a03",
-            };
-
-            this.requestObject.statusDetails = {
-              // title: 'Digital Signature Request 1',
-              title: this.requestNotificationName,
-              status: "Requested",
-              // mobno: '+919146129322',
-              mobno: this.sessionBootstrapData?.phoneNumber,
-              completedAt: "just now",
-            };
-
-            this.accordionArray = [this.requestObject, ...this.accordionArray];
+            this.accordionArray = [requestObject, ...this.accordionArray];
 
             // console.log('after added new request: ', this.accordionArray);
 
@@ -1523,7 +1368,7 @@ export class NewJourneyProfileComponent implements OnInit {
   outboundNotificationWSeventResultRes: any;
 
   sendOutboundNotification(reason: any, requestType: any) {
-    this.setRequestType(requestType);
+    this.setRequestFlag(requestType);
 
     this.widgetAPI.sendChatMessage(
       `I have shared a outbound notification request via ${this.sendRequestMode}.
@@ -1532,7 +1377,6 @@ export class NewJourneyProfileComponent implements OnInit {
 
     let reference = reason.value;
     this.requestNotificationName = "Outbound Notification Request";
-    // console.log('outbound notification reason: ', reference);
 
     let deliveryDetails;
     if (this.sendPushNotificationFlag) {
@@ -1613,29 +1457,8 @@ export class NewJourneyProfileComponent implements OnInit {
 
             this.requestObject = {
               wsEvent: null,
+              delivery: this.createDeliveryObject(this.sendRequestMode),
             };
-
-            if (this.sendRequestMode == "sms") {
-              this.requestObject.delivery = {
-                method: "sms",
-                phoneNumber: this.wsJMobileNumber,
-              };
-            } else if (this.sendRequestMode == "push-notification") {
-              this.requestObject.delivery = {
-                method: "push-notification",
-                deviceId: this.deviceID,
-              };
-            } else if (this.sendRequestMode == "email") {
-              this.requestObject.delivery = {
-                method: "email",
-                deviceId: this.authRequestedData.delivery.email,
-              };
-            } else if (this.sendRequestMode == "url") {
-              this.requestObject.delivery = {
-                method: "url",
-                deviceId: this.authRequestedData?.url,
-              };
-            }
 
             console.log("this.requestObject: ", this.requestObject);
 
@@ -1643,12 +1466,7 @@ export class NewJourneyProfileComponent implements OnInit {
               execution_ID: this.authRequestedData.id,
             };
 
-            this.requestObject.statusCSS = {
-              processLabelBGColor: "#ffd580",
-              processIconColor: "#fc6a03",
-              processLabelColor: "#fc6a03",
-            };
-
+            this.requestObject.statusCSS = this.yellowColorObject;
             this.requestObject.statusDetails = {
               // title: 'Digital Signature Request 1',
               title: this.requestNotificationName,
@@ -1710,7 +1528,6 @@ export class NewJourneyProfileComponent implements OnInit {
     let deliveryDetails;
     if (this.sendPushNotificationFlag) {
       deliveryDetails = {
-        // method: 'sms',
         method: this.sendRequestMode,
         deviceId: this.deviceID,
       };
@@ -1779,7 +1596,6 @@ export class NewJourneyProfileComponent implements OnInit {
     let deliveryDetails;
     if (this.sendPushNotificationFlag) {
       deliveryDetails = {
-        // method: 'sms',
         method: this.sendRequestMode,
         deviceId: this.deviceID,
       };
@@ -1881,7 +1697,6 @@ export class NewJourneyProfileComponent implements OnInit {
 
       if (this.sendPushNotificationFlag) {
         deliveryDetails = {
-          // method: 'sms',
           method: this.sendRequestMode,
           deviceId: this.deviceID,
         };
@@ -1929,8 +1744,6 @@ export class NewJourneyProfileComponent implements OnInit {
       this.accordionArray[this.accordionIndex].wsEvent = { ...allEventData };
     }
 
-    // console.log('acc index: ', this.accordionArray[this.accordionIndex]);
-
     switch (events) {
       case "execution-created":
         // ui change
@@ -1947,17 +1760,11 @@ export class NewJourneyProfileComponent implements OnInit {
           this.accordionArray[this.accordionIndex].statusDetails = {
             status: "Started",
             title: this.accordionArray[this.accordionIndex].statusDetails.title,
-
-            // mobno: '+919146129322',
             mobno: this.sessionBootstrapData?.phoneNumber,
             completedAt: "just now",
           };
 
-          this.accordionArray[this.accordionIndex].statusCSS = {
-            processLabelBGColor: "#b0e0e6",
-            processIconColor: "#00bfff",
-            processLabelColor: "#00bfff",
-          };
+          this.accordionArray[this.accordionIndex].statusCSS = this.blueColorObject;
         }
 
         // console.log('after added new request: ', this.accordionArray);
@@ -1968,32 +1775,15 @@ export class NewJourneyProfileComponent implements OnInit {
           this.accordionArray[this.accordionIndex].statusDetails = {
             status: "Started",
             title: this.accordionArray[this.accordionIndex].statusDetails.title,
-
-            // mobno: '+919146129322',
             mobno: this.sessionBootstrapData?.phoneNumber,
             completedAt: "just now",
           };
 
-          this.accordionArray[this.accordionIndex].statusCSS = {
-            processLabelBGColor: "#b0e0e6",
-            processIconColor: "#00bfff",
-            processLabelColor: "#00bfff",
-          };
+          this.accordionArray[this.accordionIndex].statusCSS = this.blueColorObject
         }
 
         break;
       case "execution-completed":
-        // ui change
-        // this.alertBoxColor = '#089000';
-        // this.RequestIconColor = '#089000';
-        // this.processLabelBGColor = '#90ee90';
-        // this.processLabelName = 'Completed';
-        // this.processIconColor = '#089000';
-        // this.processLabelColor = '#089000';
-        // this.RequestLabelColor = '#089000';
-
-        // this.customerAuthenticatedFlag = true;
-
         if (this.isCustomerSendReqForAuth) {
           this.customerAuthenticatedFlag = true;
         }
@@ -2006,25 +1796,16 @@ export class NewJourneyProfileComponent implements OnInit {
           this.accordionArray[this.accordionIndex].statusDetails = {
             status: "Completed",
             title: this.accordionArray[this.accordionIndex].statusDetails.title,
-
-            // mobno: '+919146129322',
             mobno: this.sessionBootstrapData?.phoneNumber,
             completedAt:
               this.accordionArray[this.accordionIndex].wsEvent.execution
                 .completedAt,
           };
 
-          this.accordionArray[this.accordionIndex].statusCSS = {
-            processLabelBGColor: "#90ee90",
-            processIconColor: "#089000",
-            processLabelColor: "#089000",
-          };
+          this.accordionArray[this.accordionIndex].statusCSS =this.greenColorObject
         }
 
         if (this.outboundNotificationFlag) {
-          // outbound notification flag true
-          // check response is it now, if it is now then enable call now button
-
           console.log(
             "outbound notification: ",
             this.accordionArray[this.accordionIndex].wsEvent
@@ -2058,11 +1839,7 @@ export class NewJourneyProfileComponent implements OnInit {
                 .completedAt,
           };
 
-          this.accordionArray[this.accordionIndex].statusCSS = {
-            processLabelBGColor: "#90ee90",
-            processIconColor: "#089000",
-            processLabelColor: "#089000",
-          };
+          this.accordionArray[this.accordionIndex].statusCSS = this.greenColorObject
         }
 
         if (this.outboundNotificationFlag) {
@@ -2075,11 +1852,13 @@ export class NewJourneyProfileComponent implements OnInit {
           );
         }
 
+        // console.log('end counter: ', this.counter);
+
         this.getMongoDBResponse(this.mobileNumber);
         this.getLookupDataFromAPI(this.customerUniqueID);
         this.getLookupSessionDataFromAPI(this.getIDsObj.journeyExternalRef);
 
-        this.widgetAPI.sendChatMessage("Session Process completed");
+      this.widgetAPI.sendChatMessage('Session Process completed');
         // this.widgetAPI.sendRichMediaMessage({ text: '  ' }, 'text', '');
 
         // ui change end
@@ -2090,34 +1869,40 @@ export class NewJourneyProfileComponent implements OnInit {
   }
 
   callFunctionArray(requestType: string) {
-    this.setRequestType(requestType);
-    console.log(this.requestName);
+    this.setRequestFlag(requestType);
 
     if (this.requestName == "sendFacialEnrollmentRequest") {
-      // console.log('sendFacialEnrollmentRequest');
       this.sendFacialEnrollmentRequest();
     } else if (this.requestName == "sendFacialAuthRequest") {
       this.sendFacialAuthRequest();
-      // console.log('sendFacialEnrollmentRequest');
     } else if (this.requestName == "sendBiometricEnrollRequest") {
       this.sendBiometricEnrollRequest();
-      // console.log('sendBiometricEnrollRequest');
     } else if (this.requestName == "sendBiometricAuthenticationRequest") {
       this.sendBiometricAuthenticationRequest();
-      // console.log('sendBiometricAuthenticationRequest');
     } else if (this.requestName == "sdkEnroll") {
       this.sdkEnroll();
-      // console.log('sdkEnroll');
     } else if (this.requestName == "sdkAuthentication") {
       this.sdkAuthentication();
-      // console.log('sdkAuthentication');
     } else if (this.requestName == "sendSignatureRequest") {
       this.sendSignatureRequest();
-      // console.log('sendSignatureRequest');
     }
   }
 
-  setRequestType(requestType: string) {
+  // This method creates delivery object
+  createDeliveryObject(method: string): any {
+    return {
+      method: method,
+      ...(method == "sms" && { phoneNumber: this.wsJMobileNumber }),
+      ...(method == "push-notification" && { deviceId: this.deviceID }),
+      ...(method == "email" && {
+        deviceId: this.authRequestedData.delivery.email,
+      }),
+      ...(method == "url" && { deviceId: this.authRequestedData?.url }),
+    };
+  }
+
+  // Set request flags
+  setRequestFlag(requestType: string) {
     if (requestType == "SMS") {
       this.sendSMSFlag = true;
       this.sendEmailFlag = false;

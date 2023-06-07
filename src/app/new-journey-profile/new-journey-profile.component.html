@@ -106,7 +106,7 @@
               <div class="col-sm-12">
                 <div
                   class="iconbox"
-                  style="margin: 10px 0px 40px 0px !important"
+                  style="margin: 20px 0px 40px 0px !important"
                 >
                   <div class="d-flex justify-content-between">
                     <div
@@ -126,15 +126,15 @@
                         ngbDropdownToggle
                         [ngStyle]="{
                           'border-color':
-                            authFacialFlag && authFacialFlag
+                          enrollFacialFlag && customerAuthenticatedFlag
                               ? 'green'
-                              : enrollFacialFlag || authFacialFlag
+                              : enrollFacialFlag && customerEnrolledFlag
                               ? 'orange'
                               : 'red'
                         }"
                       >
-                        <div class="d-table-div">
-                          <div class="d-table-cell-div">
+                      <div class="d-table-div">
+                        <div class="d-table-cell-div">
                             <img
                               src="https://lab.bravishma.com:6500/assets/images/face-recognition.png"
                               alt=""
@@ -146,6 +146,7 @@
                       </div>
                       <p class="icontext" style="font-size: 10px !important">
                         Facial
+                        {{enrollFacialFlag}} {{customerAuthenticatedFlag}}
                       </p>
                       <div ngbDropdownMenu>
                         <small
@@ -191,9 +192,9 @@
                         ngbDropdownToggle
                         [ngStyle]="{
                           'border-color':
-                            authBiometricFlag && authBiometricFlag
+                            authBiometricFlag && customerAuthenticatedFlag
                               ? 'green'
-                              : enrollBiometricFlag || authBiometricFlag
+                              : enrollBiometricFlag && customerEnrolledFlag
                               ? 'orange'
                               : 'red'
                         }"
@@ -260,9 +261,9 @@
                         ngbDropdownToggle
                         [ngStyle]="{
                           'border-color':
-                            authMobileAppFlag && authMobileAppFlag
+                            authMobileAppFlag && customerAuthenticatedFlag
                               ? 'green'
-                              : enrollMobileAppFlag || authMobileAppFlag
+                              : enrollMobileAppFlag && customerEnrolledFlag
                               ? 'orange'
                               : 'red'
                         }"
@@ -288,6 +289,7 @@
                           [disabled]="enrollMobileAppFlag"
                           class="sendReqOption"
                         >
+                          <!-- (click)="sdkEnroll()" -->
                           Enrollment Request</small
                         >
                         <small
@@ -298,6 +300,7 @@
                           "
                           class="sendReqOption"
                         >
+                          <!-- (click)="sdkAuthentication()" -->
                           Authentication Request
                         </small>
                       </div>
@@ -352,7 +355,6 @@
                   class="btn-style"
                   style="font-size: 12px !important"
                   (click)="openTestModal(testModal, 'sendSignatureRequest')"
-                  role="button"
                   ><img
                     src="https://lab.bravishma.com:6500/assets/images/signature-icon.png"
                     alt=""
@@ -361,7 +363,6 @@
                 >
                 <a
                   class="btn-style"
-                  role="button"
                   (click)="openCreditCardPaymentModal(PaymentModal)"
                   style="font-size: 12px !important"
                   ><img
@@ -372,7 +373,6 @@
                 >
                 <a
                   class="btn-style"
-                  role="button"
                   (click)="
                     openOutboundNotificationModal(outboundNotificationModal)
                   "
@@ -592,6 +592,17 @@
 
                     <div class="justify-content-start mt-4">
                       <div class="d-flex action-button justify-content-between">
+                        <!-- <button
+                      type="button"
+                      class="btn-style btn-sm me-3"
+                      (click)="
+                        sendOutboundNotification(reason, 'SMS');
+                        modal.close('Close click')
+                      "
+                      style="width: 70px"
+                    >
+                      SMS
+                    </button> -->
                         <button
                           type="button"
                           class="btn-style btn-sm"
@@ -690,18 +701,18 @@
           >
             <span
               class="alert alert-secondary w-100 p-1 rounded-0 text-center"
-              style="font-size: 14px"
+              style="font-size: 14px; background-color: #e8eaf7 !important;"
               >Status Updates</span
             >
             <div
               class="mb-4 mt-3"
-              style="width: 75%; height: 90px"
+              style="width: 75%; height: 70px"
               ngbAccordion
               *ngFor="let item of accordionArray; index as i"
             >
               <div ngbAccordionItem [collapsed]="false">
                 <div ngbAccordionHeader>
-                  <button ngbAccordionButton>
+                  <button ngbAccordionButton class="py-2">
                     <span
                       style="margin-left: 10%; width: 20%"
                       [ngStyle]="{
@@ -710,7 +721,7 @@
                             ? 'gray'
                             : item?.statusCSS.processLabelBGColor
                       }"
-                      class="fw-bold p-2 text-wrap position-absolute top-0 translate-middle text-dark badge rounded-pill"
+                      class="fw-bold p-1 text-wrap position-absolute top-0 translate-middle text-dark badge rounded-pill"
                     >
                       <svg
                         width="11"
@@ -735,23 +746,23 @@
                         class="ms-1"
                         [ngStyle]="{ color: item?.statusCSS.processLabelColor }"
                         >{{ item?.statusDetails.status }}
+                        <!-- Requested -->
                       </small>
                     </span>
 
                     <small
                       style="
-                        margin: 10px 1px 5px 1px;
-                        font-size: 16px;
+                        font-size: 14px;
                         font-weight: 600;
                       "
-                      class="fs-bold"
+                      class="fs-bold mt-1"
                     >
                       {{ item?.statusDetails.title }}
                     </small>
                   </button>
                 </div>
                 <div ngbAccordionCollapse>
-                  <div ngbAccordionBody>
+                  <div ngbAccordionBody class="py-2">
                     <ng-template>
                       <div class="d-flex justify-content-between">
                         <div class="col-8">
@@ -813,6 +824,7 @@
                               }}
                             </small>
                           </small>
+                          <!-- {{ item?.statusDetails.completedAt | date : "short" }} just now -->
                         </small>
                       </div>
                     </ng-template>

@@ -187,13 +187,14 @@ Content CSS
         line-height: 18px;
       }
       .btn-style {
-        border: solid 1px #651969;
+        border: solid 1px #509cf7;
         display: block;
         padding: 6px 10px;
         font-weight: 600;
-        color: #7e608b;
+        color: #509cf7;
         margin-top: 10px;
         font-size: 12px;
+        border-radius: 2px;
       }
       .btn-style img {
         margin-right: 10px;
@@ -300,6 +301,7 @@ Footer CSS
         line-height: 18px;
       }
     `,
+    
   ],
   encapsulation: ViewEncapsulation.Emulated,
 })
@@ -370,7 +372,7 @@ export class OptimizedCodeComponent implements OnInit {
   public emailWorkCodes!: any[];
   public additionalWorkCodes!: any[];
   public notReadyReasonCodes!: any[];
-  mobileNumber: string = "+919970061147";
+  mobileNumber: string = "+919890945819";
   submitFlag: boolean = false;
 
   rateArray: any[] = [];
@@ -434,6 +436,25 @@ export class OptimizedCodeComponent implements OnInit {
   tempCheckArray: any;
   uniqueExeIDArray: any[] = [];
   uniqueCompletedRequestedArray: any;
+
+  // Color Objects
+  blueColorObject: any =  {
+    processLabelBGColor: "#DBEAFE",
+    processIconColor: "#1E40AF",
+    processLabelColor: "#1E40AF",
+  }
+
+  yellowColorObject: any = {
+    processLabelBGColor: "#FEF9C3",
+    processIconColor: "#854D0E",
+    processLabelColor: "#854D0E",
+  }
+
+  greenColorObject: any = {
+    processLabelBGColor: "#DCFCE7",
+    processIconColor: "#166534",
+    processLabelColor: "#166534",
+  }
 
   // --------------------
 
@@ -609,11 +630,7 @@ export class OptimizedCodeComponent implements OnInit {
               exeID: {
                 execution_ID: response?.execution.id,
               },
-              statusCSS: {
-                processLabelBGColor: "#90ee90",
-                processIconColor: "#089000",
-                processLabelColor: "#089000",
-              },
+              statusCSS: this.greenColorObject,
               delivery: response?.delivery,
             };
 
@@ -787,10 +804,7 @@ export class OptimizedCodeComponent implements OnInit {
         }
 
         if (this.sessionBootstrapIsEnrolled) {
-          this.alertBoxColor = "#fc6a03";
-          this.RequestIconColor = "#fc6a03";
           this.customerEnrolledFlag = true;
-          this.RequestLabelColor = "#fc6a03";
         }
 
         // console.log(data);
@@ -935,11 +949,7 @@ export class OptimizedCodeComponent implements OnInit {
               exeID: {
                 execution_ID: this.authRequestedData.id,
               },
-              statusCSS: {
-                processLabelBGColor: "#ffd580",
-                processIconColor: "#fc6a03",
-                processLabelColor: "#fc6a03",
-              },
+              statusCSS: this.yellowColorObject,
               statusDetails: {
                 title: this.requestNotificationName,
                 status: "Requested",
@@ -1029,11 +1039,7 @@ export class OptimizedCodeComponent implements OnInit {
               exeID: {
                 execution_ID: this.authRequestedData.id,
               },
-              statusCSS: {
-                processLabelBGColor: "#ffd580",
-                processIconColor: "#fc6a03",
-                processLabelColor: "#fc6a03",
-              },
+              statusCSS: this.yellowColorObject,
               statusDetails: {
                 title: this.requestNotificationName,
                 status: "Requested",
@@ -1116,11 +1122,7 @@ export class OptimizedCodeComponent implements OnInit {
               exeID: {
                 execution_ID: this.authRequestedData.id,
               },
-              statusCSS: {
-                processLabelBGColor: "#ffd580",
-                processIconColor: "#fc6a03",
-                processLabelColor: "#fc6a03",
-              },
+              statusCSS: this.yellowColorObject,
               statusDetails: {
                 title: this.requestNotificationName,
                 status: "Requested",
@@ -1217,11 +1219,7 @@ export class OptimizedCodeComponent implements OnInit {
               exeID: {
                 execution_ID: this.authRequestedData.id,
               },
-              statusCSS: {
-                processLabelBGColor: "#ffd580",
-                processIconColor: "#fc6a03",
-                processLabelColor: "#fc6a03",
-              },
+              statusCSS: this.yellowColorObject,
               statusDetails: {
                 title: this.requestNotificationName,
                 status: "Requested",
@@ -1314,11 +1312,7 @@ export class OptimizedCodeComponent implements OnInit {
               exeID: {
                 execution_ID: this.authRequestedData.id,
               },
-              statusCSS: {
-                processLabelBGColor: "#ffd580",
-                processIconColor: "#fc6a03",
-                processLabelColor: "#fc6a03",
-              },
+              statusCSS: this.yellowColorObject,
               statusDetails: {
                 // title: 'Digital Signature Request 1',
                 title: this.requestNotificationName,
@@ -1478,12 +1472,7 @@ export class OptimizedCodeComponent implements OnInit {
               execution_ID: this.authRequestedData.id,
             };
 
-            this.requestObject.statusCSS = {
-              processLabelBGColor: "#ffd580",
-              processIconColor: "#fc6a03",
-              processLabelColor: "#fc6a03",
-            };
-
+            this.requestObject.statusCSS = this.yellowColorObject;
             this.requestObject.statusDetails = {
               // title: 'Digital Signature Request 1',
               title: this.requestNotificationName,
@@ -1777,17 +1766,11 @@ export class OptimizedCodeComponent implements OnInit {
           this.accordionArray[this.accordionIndex].statusDetails = {
             status: "Started",
             title: this.accordionArray[this.accordionIndex].statusDetails.title,
-
-            // mobno: '+919146129322',
             mobno: this.sessionBootstrapData?.phoneNumber,
             completedAt: "just now",
           };
 
-          this.accordionArray[this.accordionIndex].statusCSS = {
-            processLabelBGColor: "#b0e0e6",
-            processIconColor: "#00bfff",
-            processLabelColor: "#00bfff",
-          };
+          this.accordionArray[this.accordionIndex].statusCSS = this.blueColorObject;
         }
 
         // console.log('after added new request: ', this.accordionArray);
@@ -1798,17 +1781,11 @@ export class OptimizedCodeComponent implements OnInit {
           this.accordionArray[this.accordionIndex].statusDetails = {
             status: "Started",
             title: this.accordionArray[this.accordionIndex].statusDetails.title,
-
-            // mobno: '+919146129322',
             mobno: this.sessionBootstrapData?.phoneNumber,
             completedAt: "just now",
           };
 
-          this.accordionArray[this.accordionIndex].statusCSS = {
-            processLabelBGColor: "#b0e0e6",
-            processIconColor: "#00bfff",
-            processLabelColor: "#00bfff",
-          };
+          this.accordionArray[this.accordionIndex].statusCSS = this.blueColorObject
         }
 
         break;
@@ -1831,11 +1808,7 @@ export class OptimizedCodeComponent implements OnInit {
                 .completedAt,
           };
 
-          this.accordionArray[this.accordionIndex].statusCSS = {
-            processLabelBGColor: "#90ee90",
-            processIconColor: "#089000",
-            processLabelColor: "#089000",
-          };
+          this.accordionArray[this.accordionIndex].statusCSS =this.greenColorObject
         }
 
         if (this.outboundNotificationFlag) {
@@ -1872,11 +1845,7 @@ export class OptimizedCodeComponent implements OnInit {
                 .completedAt,
           };
 
-          this.accordionArray[this.accordionIndex].statusCSS = {
-            processLabelBGColor: "#90ee90",
-            processIconColor: "#089000",
-            processLabelColor: "#089000",
-          };
+          this.accordionArray[this.accordionIndex].statusCSS = this.greenColorObject
         }
 
         if (this.outboundNotificationFlag) {

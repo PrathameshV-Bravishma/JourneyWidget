@@ -10,6 +10,7 @@
   crossorigin="anonymous"
 ></script>
 
+
 <!-- <div
   class="d-table-div position-absolute w-100 d-flex justify-content-center align-items-center flex-column"
   style="z-index: 1; backdrop-filter: blur(10px)"
@@ -126,9 +127,9 @@
                         ngbDropdownToggle
                         [ngStyle]="{
                           'border-color':
-                            authFacialFlag && customerAuthenticatedFlag
+                          enrollFacialFlag && customerAuthenticatedFlag
                               ? 'green'
-                              : enrollFacialFlag && customerEnrolledFlag
+                              : enrollFacialFlag || customerEnrolledFlag
                               ? 'orange'
                               : 'red'
                         }"
@@ -146,6 +147,7 @@
                       </div>
                       <p class="icontext" style="font-size: 10px !important">
                         Facial
+                        {{enrollFacialFlag}} {{customerAuthenticatedFlag}}
                       </p>
                       <div ngbDropdownMenu>
                         <small
@@ -159,7 +161,6 @@
                           [disabled]="enrollFacialFlag"
                           class="sendReqOption"
                         >
-                          <!-- (click)="sendFacialEnrollmentRequest()" -->
                           Enrollment Request</small
                         >
                         <small
@@ -170,7 +171,6 @@
                           "
                           class="sendReqOption"
                         >
-                          <!-- (click)="sendFacialAuthRequest()" -->
                           Authentication Request
                         </small>
                       </div>
@@ -193,7 +193,7 @@
                           'border-color':
                             authBiometricFlag && customerAuthenticatedFlag
                               ? 'green'
-                              : enrollBiometricFlag && customerEnrolledFlag
+                              : enrollBiometricFlag || customerEnrolledFlag
                               ? 'orange'
                               : 'red'
                         }"
@@ -224,7 +224,6 @@
                           [disabled]="enrollBiometricFlag"
                           class="sendReqOption"
                         >
-                          <!-- (click)="sendBiometricEnrollRequest()" -->
                           Enrollment Request</small
                         >
                         <small
@@ -238,7 +237,6 @@
                           [disabled]="authBiometricFlag"
                           class="sendReqOption"
                         >
-                          <!-- (click)="sendBiometricAuthenticatoinRequest()" -->
 
                           Authentication Request
                         </small>
@@ -262,7 +260,7 @@
                           'border-color':
                             authMobileAppFlag && customerAuthenticatedFlag
                               ? 'green'
-                              : enrollMobileAppFlag && customerEnrolledFlag
+                              : enrollMobileAppFlag || customerEnrolledFlag
                               ? 'orange'
                               : 'red'
                         }"
@@ -354,32 +352,43 @@
                   class="btn-style"
                   style="font-size: 12px !important"
                   (click)="openTestModal(testModal, 'sendSignatureRequest')"
-                  ><img
-                    src="https://lab.bravishma.com:6500/assets/images/signature-icon.png"
+                  >
+                  <img
+                    src="https://lab.bravishma.com:6500/assets/images/edit-3.svg"
                     alt=""
+                    style="width: 20px"
+
                   />
+                  &nbsp;
                   Digital Signature Request</a
                 >
                 <a
                   class="btn-style"
                   (click)="openCreditCardPaymentModal(PaymentModal)"
                   style="font-size: 12px !important"
-                  ><img
-                    src="https://lab.bravishma.com:6500/assets/images/cc-card-icon.png"
+                  >
+                  <img
+                    src="https://lab.bravishma.com:6500/assets/images/credit-card.svg"
+                    style="width: 20px"
                     alt=""
                   />
-                  Credit Card Payment</a
-                >
+                  &nbsp;
+                  Credit Card Payment
+                </a>
                 <a
                   class="btn-style"
                   (click)="
                     openOutboundNotificationModal(outboundNotificationModal)
                   "
                   style="font-size: 12px !important"
-                  ><img
-                    src="https://lab.bravishma.com:6500/assets/images/notification-icon.png"
+                  >
+                  <img
+                    src="https://lab.bravishma.com:6500/assets/images/bell.svg"
                     alt=""
+                    style="width: 20px"
+
                   />
+                  &nbsp;
                   Outbound Notification</a
                 >
                 <!-- Text Model -->
@@ -591,17 +600,7 @@
 
                     <div class="justify-content-start mt-4">
                       <div class="d-flex action-button justify-content-between">
-                        <!-- <button
-                      type="button"
-                      class="btn-style btn-sm me-3"
-                      (click)="
-                        sendOutboundNotification(reason, 'SMS');
-                        modal.close('Close click')
-                      "
-                      style="width: 70px"
-                    >
-                      SMS
-                    </button> -->
+                        
                         <button
                           type="button"
                           class="btn-style btn-sm"
@@ -700,18 +699,18 @@
           >
             <span
               class="alert alert-secondary w-100 p-1 rounded-0 text-center"
-              style="font-size: 14px"
+              style="font-size: 14px; background-color: #e8eaf7 !important; font-weight: 600"
               >Status Updates</span
             >
             <div
               class="mb-4 mt-3"
-              style="width: 75%; height: 90px"
+              style="width: 75%; height: 70px"
               ngbAccordion
               *ngFor="let item of accordionArray; index as i"
             >
               <div ngbAccordionItem [collapsed]="false">
                 <div ngbAccordionHeader>
-                  <button ngbAccordionButton>
+                  <button ngbAccordionButton class="py-2">
                     <span
                       style="margin-left: 10%; width: 20%"
                       [ngStyle]="{
@@ -720,7 +719,7 @@
                             ? 'gray'
                             : item?.statusCSS.processLabelBGColor
                       }"
-                      class="fw-bold p-2 text-wrap position-absolute top-0 translate-middle text-dark badge rounded-pill"
+                      class="fw-bold p-1 text-wrap position-absolute top-0 translate-middle text-dark badge rounded-pill"
                     >
                       <svg
                         width="11"
@@ -751,20 +750,17 @@
 
                     <small
                       style="
-                        margin: 10px 1px 5px 1px;
-                        font-size: 16px;
+                        font-size: 14px;
                         font-weight: 600;
                       "
-                      class="fs-bold"
+                      class="fs-bold mt-1"
                     >
-                      <!-- {{ authRequestedData?.pipeline.title }} -->
                       {{ item?.statusDetails.title }}
-                      <!-- Digital Signature Request - Free Waiver -->
                     </small>
                   </button>
                 </div>
                 <div ngbAccordionCollapse>
-                  <div ngbAccordionBody>
+                  <div ngbAccordionBody class="py-2">
                     <ng-template>
                       <div class="d-flex justify-content-between">
                         <div class="col-8">
