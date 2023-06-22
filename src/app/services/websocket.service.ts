@@ -25,9 +25,6 @@ export class WebSocketService {
 
   connectWebSocket(userID: any, sessionID: any, token: any) {
     this.url = `wss://app.journeyid.io/api/iframe/ws/users/${userID}/sessions/${sessionID}`;
-    console.log('web socket send data: ', this.url);
-
-    // create new web socket connection
 
     this.websocket = new WebSocket(this.url);
 
@@ -36,9 +33,6 @@ export class WebSocketService {
     this.websocket.onopen = (e) => {
       console.log('onopen: ', e);
       console.log('websocket', this.websocket);
-
-      // send message "CONNECT token"
-
       this.websocket.send(token);
     };
 
@@ -47,18 +41,16 @@ export class WebSocketService {
     this.websocket.onmessage = (e: any) => {
       console.log('In onmessage');
       let SocketEvent = JSON.parse(e.data);
-      // console.log('onmessage: ', SocketEvent);
       this.message.next(SocketEvent);
     };
 
-    // throw error if occures
+    // throw error if occurs
     this.websocket.onerror = (event: any) => {
       this.message.error(event);
     };
+    
     this.websocket.onclose = (e) => {
       console.log('socket close: ', e);
-      // this.websocket = new WebSocket(this.url);
-      // this.websocket.send(token);
       this.message.next(e);
     };
   }
@@ -69,8 +61,10 @@ export class WebSocketService {
   }
 
   getWSPreviousData(userID: any, sessionID: any, token: any) {
+    // console.log("User id: ",userID)
+    // console.log("Session id: ",sessionID)
     let oldurl = `wss://app.journeyid.io/api/iframe/ws/users/${userID}/sessions/${sessionID}`;
-    console.log('web socket send data: ', oldurl);
+    // console.log('web socket send data: ', oldurl);
 
     // create new web socket connection
 
@@ -95,10 +89,11 @@ export class WebSocketService {
       this.wsData.next(SocketEvent);
     };
 
-    // throw error if occures
+    // throw error if occurs
     this.webForOldData.onerror = (event: any) => {
       this.wsData.error(event);
     };
+
     this.webForOldData.onclose = (e) => {
       console.log('socket close: ', e);
       this.wsData.next(e);

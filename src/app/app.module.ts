@@ -31,7 +31,7 @@ import { OptimizedCodeComponent } from "./optimized-code/optimized-code.componen
     OptimizedCodeComponent,
   ],
   imports: [
-    BrowserModule,
+    BrowserModule,  
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,

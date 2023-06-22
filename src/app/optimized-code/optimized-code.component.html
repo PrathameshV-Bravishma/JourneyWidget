@@ -10,6 +10,7 @@
   crossorigin="anonymous"
 ></script>
 
+<!-- <link rel="stylesheet" type="text/css" href="" /> -->
 
 <!-- <div
   class="d-table-div position-absolute w-100 d-flex justify-content-center align-items-center flex-column"
@@ -129,7 +130,7 @@
                           'border-color':
                           enrollFacialFlag && customerAuthenticatedFlag
                               ? 'green'
-                              : enrollFacialFlag || customerEnrolledFlag
+                              : enrollFacialFlag && customerEnrolledFlag
                               ? 'orange'
                               : 'red'
                         }"
@@ -147,7 +148,6 @@
                       </div>
                       <p class="icontext" style="font-size: 10px !important">
                         Facial
-                        {{enrollFacialFlag}} {{customerAuthenticatedFlag}}
                       </p>
                       <div ngbDropdownMenu>
                         <small
@@ -193,7 +193,7 @@
                           'border-color':
                             authBiometricFlag && customerAuthenticatedFlag
                               ? 'green'
-                              : enrollBiometricFlag || customerEnrolledFlag
+                              : enrollBiometricFlag && customerEnrolledFlag
                               ? 'orange'
                               : 'red'
                         }"
@@ -260,7 +260,7 @@
                           'border-color':
                             authMobileAppFlag && customerAuthenticatedFlag
                               ? 'green'
-                              : enrollMobileAppFlag || customerEnrolledFlag
+                              : enrollMobileAppFlag && customerEnrolledFlag
                               ? 'orange'
                               : 'red'
                         }"
@@ -463,7 +463,7 @@
                   <div class="modal-body" style="overflow-y: hidden !important">
                     <div class="Payment-details">
                       <div class="desc fw-bold">
-                        <label class="form-label">Description</label>
+                        <label class="form-label text-dark">Description</label>
 
                         <div class="input-group mb-3">
                           <input
@@ -477,7 +477,7 @@
                       </div>
 
                       <div class="desc mt-4">
-                        <label class="form-label fw-bold">Cost</label>
+                        <label class="form-label fw-bold text-dark">Cost</label>
                         <div class="input-group mb-3">
                           <span class="input-group-text">$</span>
                           <input type="text" class="form-control" #amount />
@@ -587,7 +587,7 @@
                   <div class="modal-body" style="overflow-y: hidden !important">
                     <div class="Payment-details">
                       <div class="desc fw-bold">
-                        <label class="form-label">Reason</label>
+                        <label class="form-label text-dark">Reason</label>
                         <input
                           style="padding: 0.5rem"
                           type="text"
