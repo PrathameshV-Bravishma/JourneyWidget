@@ -1,0 +1,3 @@
+
+
+Send email and sml endpoint: https://endpoint-trial.cognigy.ai/8246b1fd10818541b929d1aac2fa3c82f3f5163cb8917f1d91816d63acff5e3f (Send Email and SMS)
